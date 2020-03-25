@@ -4,7 +4,7 @@ module.exports = buildSchema(`
 type User {
   _id: ID!
   email: String!
-  password: String!
+  password: String
   isClient: Boolean!
   createdAt: String!
   updatedAt: String!
@@ -18,7 +18,6 @@ type AuthData {
 
 type Client {
   _id: ID!
-  user: User!
   code: String!
   name: String!
   createdAt: String!
@@ -33,7 +32,7 @@ type Job {
   description: String!
   tags: [String!]!
   colors: String
-  files: String
+  files: [String]
   createdAt: String!
   updatedAt: String!
 }
@@ -45,7 +44,6 @@ input UserInput {
 }
 
 input ClientInput {
-  user: ID!
   code: String!
   name: String!
 }
@@ -61,7 +59,7 @@ input JobInput {
 }
 
 type RootQuery {
-    login(email: String!, password: String!, isClient: Boolean!): AuthData!
+    login(email: String!, password: String!): AuthData!
     clients: [Client!]!
     jobs: [Job!]!
 }

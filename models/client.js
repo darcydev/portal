@@ -2,18 +2,14 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema(
+const clientSchema = new Schema(
   {
-    email: {
+    code: {
       type: String,
       required: true
     },
-    password: {
+    name: {
       type: String,
-      required: true
-    },
-    isClient: {
-      type: Boolean,
       required: true
     }
   },
@@ -22,4 +18,4 @@ const userSchema = new Schema(
   }
 );
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('Client', clientSchema);
