@@ -58,6 +58,15 @@ input JobInput {
   files: String
 }
 
+input JobUpdate {
+  code: String!
+  title: String
+  description: String
+  tags: [String]
+  colors: String
+  files: String
+}
+
 type RootQuery {
     login(email: String!, password: String!): AuthData!
     clients: [Client!]!
@@ -68,6 +77,7 @@ type RootMutation {
   createUser(userInput: UserInput): User
   createClient(clientInput: ClientInput): Client
   createJob(jobInput: JobInput): Job
+  updateJob(jobUpdate: JobUpdate): Job
 }
 
 schema {

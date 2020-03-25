@@ -35,5 +35,24 @@ module.exports = {
     } catch (error) {
       throw error;
     }
+  },
+  updateJob: async (args, req) => {
+    const job = await Job.findOne({ code: args.jobUpdate.code });
+    if (!job) throw new Error('Job not found');
+
+    const { title, description, tags, colors, files } = args.jobUpdate;
+    if (title) job.title = title;
+    if (description) job.description = description;
+    if (tags) job.tags.push(tags);
+    if (colors) job.colors = colors; // TODO create array for colors
+    if (files) job.files.push(files);
+
+    try {
+      const result = await job.save();
+      updatedJob = transformJob(result);
+      return updatedJob;
+    } catch (error) {
+      throw error;
+    }
   }
 };
