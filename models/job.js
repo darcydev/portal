@@ -2,16 +2,6 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-/* 
-  client: Client!
-  code: String!
-  title: String!
-  description: String!
-  tags: [String!]!
-  colors: String
-  files: String
-*/
-
 const jobSchema = new Schema(
   {
     client: {
