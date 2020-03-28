@@ -11,6 +11,15 @@ module.exports = {
       throw error;
     }
   },
+  jobsByClientId: async (args, req) => {
+    try {
+      const jobs = await Job.find({ client: { _id: args.clientId } });
+      if (!jobs) throw new Error('No jobs found');
+      return jobs.map((job) => transformJob(job));
+    } catch (error) {
+      throw error;
+    }
+  },
   createJob: async (args, req) => {
     // check user is auth
     /// if (!req.isAuth) throw new Error('User is not authenticated');

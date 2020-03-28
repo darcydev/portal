@@ -12,9 +12,18 @@ module.exports = {
       throw err;
     }
   },
+  clientByCode: async (args, req) => {
+    try {
+      const client = await Client.findOne({ code: args.code });
+      if (!client) throw new Error('Client by code not found');
+      return transformClient(client);
+    } catch (error) {
+      throw error;
+    }
+  },
   createClient: async (args, req) => {
     // check user is auth
-    /// if (!req.isAuth) throw new Error('User is not authenticated');
+    if (!req.isAuth) throw new Error('User is not authenticated');
 
     // TODO check code is unique
     const existingCode = await Client.findOne({ code: args.clientInput.code });

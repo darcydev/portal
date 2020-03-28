@@ -4,8 +4,10 @@ import styled from 'styled-components';
 
 import HomePage from './pages/Home';
 import AuthPage from './pages/Auth';
-import ClientPage from './pages/Clients';
-import JobPage from './pages/Jobs';
+import ClientsPage from './pages/Clients';
+import SingleClientPage from './pages/SingleClient';
+import JobsPage from './pages/Jobs';
+import SingleJobPage from './pages/SingleJob';
 import MainNavigation from './components/Navigation/MainNavigation';
 import AuthContext from './context/auth-context';
 
@@ -43,8 +45,12 @@ export default function App() {
               )}
               {!token && <Route path='/auth' component={AuthPage} />}
               {token && <Route path='/home' component={HomePage} />}
-              {token && <Route path='/clients' component={ClientPage} />}
-              {token && <Route path='/jobs' component={JobPage} />}
+              {token && <Route path='/clients' component={ClientsPage} />}
+              {token && (
+                <Route path='/client/:code' component={SingleClientPage} />
+              )}
+              {token && <Route path='/jobs' component={JobsPage} />}
+              {token && <Route path='/job/:code' component={SingleJobPage} />}
             </Switch>
           </StyledMain>
         </AuthContext.Provider>

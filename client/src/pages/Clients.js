@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Table, Tag, Input, Button } from 'antd';
+import { Table, Tag, Input, Button } from 'antd';
 import { Link } from 'react-router-dom';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
 
 export default function Client() {
   const [clients, handleClients] = useState([]);
-  const [searchText, handleSearchText] = useState('');
-  const [searchColumn, handleSearchColumn] = useState('');
-
-  let columns = [];
 
   useEffect(() => {
     fetchClients();
@@ -43,7 +39,7 @@ export default function Client() {
   }
 
   // TABLE
-  columns = [
+  let columns = [
     {
       title: 'Name',
       dataIndex: 'name',
@@ -73,7 +69,7 @@ export default function Client() {
   return (
     <div>
       <h1>the client page</h1>
-      <Table pagination={false} columns={columns} dataSource={data} />,
+      <Table pagination={false} columns={columns} dataSource={data} />
     </div>
   );
 }

@@ -70,6 +70,8 @@ input JobUpdate {
 type RootQuery {
     login(email: String!, password: String!): AuthData!
     clients: [Client!]!
+    clientByCode(code: String!): Client!
+    jobsByClientId(clientId: String!): [Job!]!
     jobs: [Job!]!
 }
 
