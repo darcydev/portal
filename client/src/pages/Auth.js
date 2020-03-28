@@ -1,7 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Form, Input, Button } from 'antd';
 
+import AuthContext from '../context/auth-context';
+
 export default function Auth() {
+  const context = useContext(AuthContext);
+
+  console.log(context);
+
   const [isLogin, handleLogin] = useState(false);
 
   const onFinish = (values) => {
@@ -32,18 +38,20 @@ export default function Auth() {
         return res.json();
       })
       .then((resData) => {
-        console.log(resData);
-
-        handleLogin(true);
+        if (resData.data.login.token) {
+          context.login(
+            resData.data.login.token,
+            resData.data.login.userId,
+            resData.data.login.tokenExpiration
+          );
+        }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err));
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed', errorInfo);
   };
-
-  console.log(isLogin);
 
   return (
     <Form onFinish={onFinish} onFinishFailed={onFinishFailed}>

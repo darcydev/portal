@@ -1,25 +1,37 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
+import AuthContext from '../../context/auth-context';
+
 export default function MainNavigation() {
+  const AUTH_CONTEXT = useContext(AuthContext);
+
   return (
     <StyledHeader>
       <StyledLogo>
-        <h1>LOGO</h1>
+        <NavLink to='/home'>
+          <h1>LOGO</h1>
+        </NavLink>
       </StyledLogo>
       <StyledNav>
         <ul>
-          <li>
-            <NavLink to='/auth'>Authenticate</NavLink>
-          </li>
-          <li>
-            <NavLink to='/clients'>Clients</NavLink>
-          </li>
-          <li>
-            <NavLink to='/jobs'>Jobs</NavLink>
-          </li>
-          <li>Logout</li>
+          {!AUTH_CONTEXT.token && (
+            <li>
+              <NavLink to='/auth'>Login</NavLink>
+            </li>
+          )}
+          {AUTH_CONTEXT.token && (
+            <>
+              <li>
+                <NavLink to='/clients'>Clients</NavLink>
+              </li>
+              <li>
+                <NavLink to='/jobs'>Jobs</NavLink>
+              </li>
+              <li onClick={() => AUTH_CONTEXT.logout()}>Logout</li>
+            </>
+          )}
         </ul>
       </StyledNav>
     </StyledHeader>
