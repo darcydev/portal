@@ -13,6 +13,13 @@ export default function MainNavigation() {
           <li>
             <NavLink to='/auth'>Authenticate</NavLink>
           </li>
+          <li>
+            <NavLink to='/clients'>Clients</NavLink>
+          </li>
+          <li>
+            <NavLink to='/jobs'>Jobs</NavLink>
+          </li>
+          <li>Logout</li>
         </ul>
       </StyledNav>
     </StyledHeader>
