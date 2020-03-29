@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Tag, Input, Button } from 'antd';
+import { Table, Input } from 'antd';
 import { Link } from 'react-router-dom';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
@@ -38,38 +38,37 @@ export default function Client() {
       .catch((err) => console.error(err));
   }
 
-  // TABLE
-  let columns = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name'
-    },
-    {
-      title: 'Code',
-      dataIndex: 'code',
-      key: 'code'
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (text, record) => (
-        <span>
-          <Link style={{ marginRight: 16 }} to={`client/${record.code}`}>
-            Details
-          </Link>
-        </span>
-      )
-    }
-  ];
-
-  // change the key name (from _id to key) in an array of objects
-  const data = clients.map(({ _id: key, ...rest }) => ({ key, ...rest }));
-
   return (
     <div>
       <h1>the client page</h1>
-      <Table pagination={false} columns={columns} dataSource={data} />
+      <Table
+        pagination={false}
+        // change the key name (from _id to key) in an array of objects
+        dataSource={clients.map(({ _id: key, ...rest }) => ({ key, ...rest }))}
+        columns={[
+          {
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name'
+          },
+          {
+            title: 'Code',
+            dataIndex: 'code',
+            key: 'code'
+          },
+          {
+            title: 'Action',
+            key: 'action',
+            render: (text, record) => (
+              <span>
+                <Link style={{ marginRight: 16 }} to={`/client/${record.code}`}>
+                  Details
+                </Link>
+              </span>
+            )
+          }
+        ]}
+      />
     </div>
   );
 }

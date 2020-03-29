@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Table, Tag } from 'antd';
 
 export default function SingleClient() {
   const [client, handleClient] = useState(null);
@@ -9,7 +10,6 @@ export default function SingleClient() {
 
   useEffect(() => {
     fetchClientByCode();
-    // fetchJobsByClientId();
   }, []);
 
   async function fetchClientByCode() {
@@ -75,13 +75,57 @@ export default function SingleClient() {
       <h1>single client page</h1>
       <h4>this client: {code}</h4>
       <h5>this clients jobs:</h5>
-      <ul>
-        {jobs.map((job) => (
-          <li key={job._id}>
-            {job.title} - {job.code}
-          </li>
-        ))}
-      </ul>
+      <Table
+        pagination={false}
+        // change the key name (from _id to key) in an array of objects
+        dataSource={jobs.map(({ _id: key, ...rest }) => ({ key, ...rest }))}
+        columns={[
+          {
+            title: 'Code',
+            dataIndex: 'code',
+            key: 'code'
+          },
+          {
+            title: 'Title',
+            dataIndex: 'title',
+            key: 'title'
+          },
+          {
+            title: 'Description',
+            dataIndex: 'Description',
+            key: 'description'
+          },
+          {
+            title: 'Tags',
+            key: 'tags',
+            dataIndex: 'tags',
+            render: (tags) => (
+              <span>
+                {tags.map((tag) => {
+                  let color = tag.length > 5 ? 'geekblue' : 'green';
+                  if (tag === 'loser') {
+                    color = 'volcano';
+                  }
+                  return (
+                    <Tag color={color} key={tag}>
+                      {tag.toUpperCase()}
+                    </Tag>
+                  );
+                })}
+              </span>
+            )
+          },
+          {
+            title: 'Action',
+            key: 'action',
+            render: (text, record) => (
+              <Link style={{ marginRight: 16 }} to={`/job/${record.code}`}>
+                Details
+              </Link>
+            )
+          }
+        ]}
+      />
     </div>
   );
 }
