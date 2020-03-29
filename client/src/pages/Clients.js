@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Input } from 'antd';
 import { Link } from 'react-router-dom';
-import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
 
 export default function Client() {

@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
+import { Layout } from 'antd';
 import styled from 'styled-components';
 
 import HomePage from './pages/Home';
@@ -10,6 +11,9 @@ import JobsPage from './pages/Jobs';
 import SingleJobPage from './pages/SingleJob';
 import MainNavigation from './components/Navigation/MainNavigation';
 import AuthContext from './context/auth-context';
+// import Footer from './components/Footer';
+
+const { Header, Content, Footer } = Layout;
 
 export default function App() {
   const token = localStorage.getItem('token');
@@ -35,7 +39,9 @@ export default function App() {
         <AuthContext.Provider
           value={{ token: token, userId: userId, login: login, logout: logout }}
         >
-          <MainNavigation />
+          <Header>
+            <MainNavigation />
+          </Header>
           <StyledMain>
             <Switch>
               {token ? (
@@ -53,6 +59,10 @@ export default function App() {
               {token && <Route path='/job/:code' component={SingleJobPage} />}
             </Switch>
           </StyledMain>
+          <Footer style={{ textAlign: 'center' }}>
+            Ant Design ©2018 Created by Ant UED
+          </Footer>
+          {/* // <Footer /> */}
         </AuthContext.Provider>
       </>
     </BrowserRouter>
@@ -61,4 +71,6 @@ export default function App() {
 
 const StyledMain = styled.main`
   margin: 4rem 2.5rem;
+
+  min-height: 80vh;
 `;

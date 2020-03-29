@@ -1,8 +1,11 @@
 import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import { Layout, Menu, Breadcrumb } from 'antd';
 
 import AuthContext from '../../context/auth-context';
+
+const { Header } = Layout;
 
 export default function MainNavigation() {
   const AUTH_CONTEXT = useContext(AuthContext);
@@ -15,7 +18,12 @@ export default function MainNavigation() {
         </NavLink>
       </StyledLogo>
       <StyledNav>
-        <ul>
+        <Menu theme='dark' mode='horizontal' defaultSelectedKeys={['2']}>
+          <Menu.Item key='1'>nav 1</Menu.Item>
+          <Menu.Item key='2'>nav 2</Menu.Item>
+          <Menu.Item key='3'>nav 3</Menu.Item>
+        </Menu>
+        {/*        <ul>
           {!AUTH_CONTEXT.token && (
             <li>
               <NavLink to='/auth'>Login</NavLink>
@@ -32,7 +40,7 @@ export default function MainNavigation() {
               <li onClick={() => AUTH_CONTEXT.logout()}>Logout</li>
             </>
           )}
-        </ul>
+        </ul> */}
       </StyledNav>
     </StyledHeader>
   );
