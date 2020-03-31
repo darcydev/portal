@@ -10,10 +10,12 @@ import SingleClientPage from './pages/SingleClient';
 import JobsPage from './pages/Jobs';
 import SingleJobPage from './pages/SingleJob';
 import MainNavigation from './components/Navigation/MainNavigation';
-import AuthContext from './context/auth-context';
-// import Footer from './components/Footer';
+import NewClient from './components/Modals/NewClient';
 
-const { Header, Content, Footer } = Layout;
+import AuthContext from './context/auth-context';
+import Footer from './components/Footer';
+
+const { Header } = Layout;
 
 export default function App() {
   const token = localStorage.getItem('token');
@@ -59,10 +61,7 @@ export default function App() {
               {token && <Route path='/job/:code' component={SingleJobPage} />}
             </Switch>
           </StyledMain>
-          <Footer style={{ textAlign: 'center' }}>
-            Ant Design ©2018 Created by Ant UED
-          </Footer>
-          {/* // <Footer /> */}
+          <Footer />
         </AuthContext.Provider>
       </>
     </BrowserRouter>

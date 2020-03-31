@@ -9,6 +9,7 @@ import {
 } from '@ant-design/icons';
 
 import BigSquareButton from '../components/Buttons/BigSquareButton';
+import NewClient from '../components/Modals/NewClient';
 
 export default function Home() {
   const ICON_SIZE = '30px';
@@ -20,11 +21,7 @@ export default function Home() {
         <h3>The place to hold all your client information</h3>
       </div>
       <div className='button-group'>
-        <BigSquareButton
-          icon={<UserAddOutlined style={{ fontSize: ICON_SIZE }} />}
-          text='NEW CLIENT'
-          onClick={() => console.log('new client btn clicked -> open modal')}
-        />
+        <NewClient />
         <BigSquareButton
           icon={<FolderAddOutlined style={{ fontSize: ICON_SIZE }} />}
           text='NEW JOB'

@@ -1,0 +1,37 @@
+.toggle {
+  display: none;
+  padding: 8px;
+  font-size: 16px;
+}
+
+.navbar-links.opened {
+  align-self: flex-start;
+  padding-right: 30px;
+}
+
+/**
+* Smaller screen + Mobile
+*/
+@media screen and (max-width: 850px) {
+  .Navbar {
+    flex-direction: column;
+    height: auto;
+    padding: 10px 0;
+  }
+
+  .navbar-links {
+    flex-direction: column;
+  }
+
+  .navbar-links.closed {
+    display: none;
+  }
+
+  .toggle {
+    display: block;
+  }
+
+  .navbar-link a {
+    border-bottom: none;
+  }
+}

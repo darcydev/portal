@@ -1,28 +1,49 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import { Layout, Menu, Breadcrumb } from 'antd';
+import { UpOutlined, DownOutlined } from '@ant-design/icons';
 
 import AuthContext from '../../context/auth-context';
 
-const { Header } = Layout;
+import './MainNavigation.css';
 
 export default function MainNavigation() {
+  const [isOpen, toggleOpen] = useState(false);
+
   const AUTH_CONTEXT = useContext(AuthContext);
 
   return (
-    <StyledHeader>
-      <StyledLogo>
+    <StyledHeader className='Navbar'>
+      <div>
         <NavLink to='/home'>
           <h1>LOGO</h1>
         </NavLink>
-      </StyledLogo>
+        <StyledMenuButton
+          className='toggle'
+          onClick={() => toggleOpen(!isOpen)}
+        >
+          {isOpen ? <UpOutlined /> : <DownOutlined />}
+        </StyledMenuButton>
+      </div>
       <StyledNav>
-        <Menu theme='dark' mode='horizontal' defaultSelectedKeys={['2']}>
-          <Menu.Item key='1'>nav 1</Menu.Item>
-          <Menu.Item key='2'>nav 2</Menu.Item>
-          <Menu.Item key='3'>nav 3</Menu.Item>
-        </Menu>
+        <ul style={{ display: 'flex' }}>
+          {!AUTH_CONTEXT.token && (
+            <li>
+              <NavLink to='/auth'>Login</NavLink>
+            </li>
+          )}
+          {AUTH_CONTEXT.token && (
+            <>
+              <li>
+                <NavLink to='/clients'>Clients</NavLink>
+              </li>
+              <li>
+                <NavLink to='/jobs'>Jobs</NavLink>
+              </li>
+              <li onClick={() => AUTH_CONTEXT.logout()}>Logout</li>
+            </>
+          )}
+        </ul>
         {/*        <ul>
           {!AUTH_CONTEXT.token && (
             <li>
@@ -52,16 +73,18 @@ const StyledHeader = styled.header`
   top: 0;
   width: 100%;
   height: 3.5rem;
-  background: #01d1d1;
   padding: 0 1rem;
   display: flex;
   align-items: center;
+  color: #fff;
 `;
 
-const StyledLogo = styled.div`
-  h1 {
-    margin: 0;
-    font-size: 1.5rem;
+const StyledMenuButton = styled.button`
+  background-color: transparent;
+  border: none;
+  color: white;
+  &:focus {
+    outline: 0;
   }
 `;
 
@@ -79,7 +102,6 @@ const StyledNav = styled.nav`
 
       a {
         text-decoration: none;
-        color: #000;
 
         :hover,
         :active {
