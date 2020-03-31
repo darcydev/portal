@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Table, Tag } from 'antd';
+import { PageHeader, Table, Tag, Tabs, Button, Descriptions } from 'antd';
 
 export default function SingleClient() {
   const [client, handleClient] = useState(null);
@@ -19,6 +19,8 @@ export default function SingleClient() {
         clientByCode(code: "${code}") {
           _id
           name
+          createdAt
+          updatedAt
         }
       }
       `
@@ -72,60 +74,98 @@ export default function SingleClient() {
 
   return (
     <div>
-      <h1>single client page</h1>
-      <h4>this client: {code}</h4>
-      <h5>this clients jobs:</h5>
-      <Table
-        pagination={false}
-        // change the key name (from _id to key) in an array of objects
-        dataSource={jobs.map(({ _id: key, ...rest }) => ({ key, ...rest }))}
-        columns={[
-          {
-            title: 'Code',
-            dataIndex: 'code',
-            key: 'code'
-          },
-          {
-            title: 'Title',
-            dataIndex: 'title',
-            key: 'title'
-          },
-          {
-            title: 'Description',
-            dataIndex: 'Description',
-            key: 'description'
-          },
-          {
-            title: 'Tags',
-            key: 'tags',
-            dataIndex: 'tags',
-            render: (tags) => (
-              <span>
-                {tags.map((tag) => {
-                  let color = tag.length > 5 ? 'geekblue' : 'green';
-                  if (tag === 'loser') {
-                    color = 'volcano';
-                  }
-                  return (
-                    <Tag color={color} key={tag}>
-                      {tag.toUpperCase()}
-                    </Tag>
-                  );
-                })}
-              </span>
-            )
-          },
-          {
-            title: 'Action',
-            key: 'action',
-            render: (text, record) => (
-              <Link style={{ marginRight: 16 }} to={`/job/${record.code}`}>
-                Details
-              </Link>
-            )
-          }
+      <PageHeader
+        className='site-page-header-responsive'
+        onBack={() => window.history.back()}
+        title={client ? client.name : 'Loading'}
+        subTitle={`Client Code: ${code}`}
+        extra={[
+          <Button key='3' type='primary'>
+            Add Job
+          </Button>,
+          <Button key='2' type='primary'>
+            Update
+          </Button>,
+          <Button key='1' type='danger'>
+            Delete
+          </Button>
         ]}
-      />
+        footer={
+          <Tabs>
+            <Tabs.TabPane tab='Jobs' key='1'>
+              <Table
+                pagination={false}
+                // change the key name (from _id to key) in an array of objects
+                dataSource={jobs.map(({ _id: key, ...rest }) => ({
+                  key,
+                  ...rest
+                }))}
+                columns={[
+                  {
+                    title: 'Code',
+                    dataIndex: 'code',
+                    key: 'code'
+                  },
+                  {
+                    title: 'Title',
+                    dataIndex: 'title',
+                    key: 'title'
+                  },
+                  {
+                    title: 'Description',
+                    dataIndex: 'Description',
+                    key: 'description'
+                  },
+                  {
+                    title: 'Tags',
+                    key: 'tags',
+                    dataIndex: 'tags',
+                    render: (tags) => (
+                      <span>
+                        {tags.map((tag) => {
+                          let color = tag.length > 5 ? 'geekblue' : 'green';
+                          if (tag === 'loser') {
+                            color = 'volcano';
+                          }
+                          return (
+                            <Tag color={color} key={tag}>
+                              {tag.toUpperCase()}
+                            </Tag>
+                          );
+                        })}
+                      </span>
+                    )
+                  },
+                  {
+                    title: 'Action',
+                    key: 'action',
+                    render: (text, record) => (
+                      <Link
+                        style={{ marginRight: 16 }}
+                        to={`/job/${record.code}`}
+                      >
+                        Details
+                      </Link>
+                    )
+                  }
+                ]}
+              />
+            </Tabs.TabPane>
+            <Tabs.TabPane tab='Details' key='2'>
+              two
+            </Tabs.TabPane>
+          </Tabs>
+        }
+      >
+        <Descriptions size='small' column={2}>
+          <Descriptions.Item label='Created At'>
+            {client ? client.createdAt : null}
+          </Descriptions.Item>
+          <Descriptions.Item label='Updated At'>
+            {client ? client.updatedAt : null}
+          </Descriptions.Item>
+        </Descriptions>
+      </PageHeader>
     </div>
   );
 }

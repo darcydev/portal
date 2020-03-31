@@ -73,6 +73,7 @@ type RootQuery {
     clientByCode(code: String!): Client!
     jobsByClientId(clientId: String!): [Job!]!
     jobs: [Job!]!
+    jobByCode(code: String!): Job!
 }
 
 type RootMutation {

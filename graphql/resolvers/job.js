@@ -11,6 +11,15 @@ module.exports = {
       throw error;
     }
   },
+  jobByCode: async (args, req) => {
+    try {
+      const job = await Job.findOne({ code: args.code });
+      if (!job) throw new Error('Job by code not found');
+      return transformJob(job);
+    } catch (error) {
+      throw error;
+    }
+  },
   jobsByClientId: async (args, req) => {
     try {
       const jobs = await Job.find({ client: { _id: args.clientId } });
