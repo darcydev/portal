@@ -1,15 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link, useHistory } from 'react-router-dom';
-import {
-  UserAddOutlined,
-  FolderAddOutlined,
-  TeamOutlined,
-  FolderOpenOutlined
-} from '@ant-design/icons';
+import { TeamOutlined, FolderOpenOutlined } from '@ant-design/icons';
 
-import BigSquareButton from '../components/Buttons/BigSquareButton';
 import NewClient from '../components/Modals/NewClient';
+import NewJob from '../components/Modals/NewJob';
 
 export default function Home() {
   const ICON_SIZE = '30px';
@@ -20,25 +15,31 @@ export default function Home() {
         <h1>Welcome to the Portal</h1>
         <h3>The place to hold all your client information</h3>
       </div>
-      <div className='button-group'>
+      <StyledFlexContainer>
         <NewClient />
-        <BigSquareButton
-          icon={<FolderAddOutlined style={{ fontSize: ICON_SIZE }} />}
-          text='NEW JOB'
-          onClick={() => console.log('new job btn clicked -> open modal')}
-        />
+        <NewJob />
         <StyledLink to='/clients' className='btn__big-square'>
-          <FolderOpenOutlined style={{ fontSize: ICON_SIZE }} />
-          <span>VIEW CLIENTS</span>
+          <div>
+            <FolderOpenOutlined style={{ fontSize: ICON_SIZE }} />
+            <span>VIEW CLIENTS</span>
+          </div>
         </StyledLink>
         <StyledLink to='/jobs' className='btn__big-square'>
-          <FolderOpenOutlined style={{ fontSize: ICON_SIZE }} />
-          <span>VIEW JOBS</span>
+          <div>
+            <FolderOpenOutlined style={{ fontSize: ICON_SIZE }} />
+            <span>VIEW JOBS</span>
+          </div>
         </StyledLink>
-      </div>
+      </StyledFlexContainer>
     </div>
   );
 }
+
+const StyledFlexContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+`;
 
 const StyledLink = styled(Link)`
   display: flex;
@@ -46,4 +47,10 @@ const StyledLink = styled(Link)`
   color: inherit;
   text-align: center;
   font-size: 17px;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+  }
 `;

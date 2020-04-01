@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Tag, Input, Button } from 'antd';
+import { Card, Table, Tag, Input, Button } from 'antd';
 import { Link } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
+import CustomTag from '../components/Tag';
 
 export default function Jobs() {
   const [jobs, handleJobs] = useState([]);
@@ -46,7 +47,7 @@ export default function Jobs() {
 
   return (
     <div>
-      <h1>the jobs page</h1>
+      <h1>All Jobs</h1>
       <Table
         pagination={false}
         // change the key name (from _id to key) in an array of objects
@@ -70,7 +71,19 @@ export default function Jobs() {
           {
             title: 'Tags',
             dataIndex: 'tags',
-            key: 'tags'
+            key: 'tags',
+            render: (tags) => (
+              <span>
+                {tags.map((tag) => (
+                  <CustomTag text={tag} />
+                ))}
+              </span>
+            )
+          },
+          {
+            title: 'Created',
+            dataIndex: 'createdAt',
+            key: 'createdAt'
           },
           {
             title: 'Action',

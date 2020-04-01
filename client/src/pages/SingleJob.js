@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { PageHeader, Table, Tag, Tabs, Button, Descriptions } from 'antd';
+import { Card, PageHeader, Table, Tag, Tabs, Button, Descriptions } from 'antd';
+import Moment from 'react-moment';
+import styled from 'styled-components';
 
 export default function SingleJob() {
   const [job, handleJob] = useState(null);
@@ -71,13 +73,76 @@ export default function SingleJob() {
         footer={
           <Tabs>
             <Tabs.TabPane tab='Colors' key='1'>
-              one
+              <StyledTabContent>one</StyledTabContent>
             </Tabs.TabPane>
             <Tabs.TabPane tab='Delivered' key='2'>
-              two
+              <StyledTabContent>
+                <StyledFlexContainer>
+                  <Card
+                    hoverable
+                    cover={
+                      <img
+                        alt='example'
+                        src='https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png'
+                      />
+                    }
+                  >
+                    <Card.Meta
+                      title='Europe Street beat'
+                      description='www.instagram.com'
+                    />
+                  </Card>
+                  <Card
+                    hoverable
+                    cover={
+                      <img
+                        alt='example'
+                        src='https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png'
+                      />
+                    }
+                  >
+                    <Card.Meta
+                      title='Europe Street beat'
+                      description='www.instagram.com'
+                    />
+                  </Card>
+                </StyledFlexContainer>
+              </StyledTabContent>
             </Tabs.TabPane>
             <Tabs.TabPane tab='Graveyard' key='3'>
-              three
+              <StyledTabContent>
+                {' '}
+                <StyledFlexContainer>
+                  <Card
+                    hoverable
+                    cover={
+                      <img
+                        alt='example'
+                        src='https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png'
+                      />
+                    }
+                  >
+                    <Card.Meta
+                      title='Europe Street beat'
+                      description='www.instagram.com'
+                    />
+                  </Card>
+                  <Card
+                    hoverable
+                    cover={
+                      <img
+                        alt='example'
+                        src='https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png'
+                      />
+                    }
+                  >
+                    <Card.Meta
+                      title='Europe Street beat'
+                      description='www.instagram.com'
+                    />
+                  </Card>
+                </StyledFlexContainer>
+              </StyledTabContent>
             </Tabs.TabPane>
           </Tabs>
         }
@@ -96,13 +161,30 @@ export default function SingleJob() {
             {job ? job.tags : 'Loading'}
           </Descriptions.Item>
           <Descriptions.Item label='Created At'>
-            {job ? job.createdAt : 'Loading'}
+            {job ? <Moment>{job.createdAt}</Moment> : 'Loading'}
           </Descriptions.Item>
           <Descriptions.Item label='Updated At'>
-            {job ? job.updatedAt : 'Loading'}
+            {job ? <Moment fromNow>{job.updatedAt}</Moment> : 'Loading'}
           </Descriptions.Item>
         </Descriptions>
       </PageHeader>
     </div>
   );
 }
+
+const StyledTabContent = styled.div`
+  padding: 40px 0;
+`;
+
+const StyledFlexContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+
+  .ant-card {
+    flex: 1 0 500px;
+    box-sizing: border-box;
+    margin: 1rem 0.25em;
+    max-width: 300px;
+  }
+`;

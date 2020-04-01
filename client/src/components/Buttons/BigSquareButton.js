@@ -18,9 +18,9 @@ export default function BigSquareButton({
 }
 
 const StyledButton = styled.button`
-  width: 150px;
-  height: 120px;
-  background: grey;
+  width: 200px;
+  height: 160px;
+  background: rgb(170, 170, 170);
   border-radius: 10px;
 
   .content {
