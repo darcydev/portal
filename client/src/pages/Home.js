@@ -57,6 +57,7 @@ const StyledLink = styled(Link)`
   color: inherit;
   text-align: center;
   font-size: 17px;
+  margin: 10px;
 
   div {
     display: flex;

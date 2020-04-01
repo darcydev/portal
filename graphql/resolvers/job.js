@@ -31,10 +31,12 @@ module.exports = {
   },
   createJob: async (args, req) => {
     // check user is auth
-    // if (!req.isAuth) throw new Error('User is not authenticated');
+    if (!req.isAuth) throw new Error('User is not authenticated');
     // ensure code is unique
     const existingCode = await Job.findOne({ code: args.jobInput.code });
     if (existingCode) throw new Error('Job code already exists');
+
+    // TODO check that code and title aren't null
 
     const job = new Job({
       client: args.jobInput.client,

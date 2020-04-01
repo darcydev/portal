@@ -8,7 +8,7 @@ export default function BigSquareButton({
   onClick
 }) {
   return (
-    <StyledButton onClick={onClick}>
+    <StyledButton onClick={onClick} className='btn__big-square'>
       <div className='content'>
         {icon}
         <span className='text'>{text}</span>

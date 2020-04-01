@@ -1,13 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Select, Form, Input, Modal, Upload, message } from 'antd';
-import {
-  PlusOutlined,
-  FolderAddOutlined,
-  InboxOutlined
-} from '@ant-design/icons';
+import { FolderAddOutlined, InboxOutlined } from '@ant-design/icons';
 
 import BigSquareButton from '../Buttons/BigSquareButton';
-
 import AuthContext from '../../context/auth-context';
 
 const { Dragger } = Upload;
@@ -15,7 +10,6 @@ const { Option } = Select;
 
 export default function NewJob() {
   const [visible, handleVisible] = useState(false);
-  const [loading, handleLoading] = useState(false);
   const [clients, handleClients] = useState([]);
 
   const [form] = Form.useForm();
@@ -28,9 +22,17 @@ export default function NewJob() {
   const onModalOpen = () => handleVisible(true);
 
   const onFinish = (values) => {
-    const { code, name } = values;
+    console.log(values);
 
-    createClient(code, name);
+    // fetch clientId by clientCode
+
+    createJob(
+      values.clientId,
+      values.code,
+      values.title,
+      values.description,
+      values.tags
+    );
   };
 
   const onCancel = () => handleVisible(false);
@@ -63,18 +65,19 @@ export default function NewJob() {
   }
 
   // create client in backend
-  async function createClient(code, name) {
+  async function createJob(clientId, code, title, description, tags) {
     let requestBody = {
       query: `
           mutation { 
-            createClient(clientInput: {code: "${code}", name: "${name}"}) {
+            createJob(jobInput: {client: "${clientId}", code: "${code}", title: "${title}", description: "${description}", tags: ["${tags}"]}) {
               _id
               code
-              name
             }
           }
         `
     };
+
+    console.log(tags);
 
     const res = await fetch('http://localhost:8000/graphql', {
       method: 'POST',
@@ -91,14 +94,12 @@ export default function NewJob() {
       .catch((err) => console.error(err));
   }
 
-  console.log(clients);
-
   return (
     <div>
       <BigSquareButton
         onClick={onModalOpen}
         icon={<FolderAddOutlined style={{ fontSize: '30px' }} />}
-        text='NEW CLIENT'
+        text='NEW JOB'
       />
       <Modal
         visible={visible}
@@ -122,7 +123,7 @@ export default function NewJob() {
             >
               {clients &&
                 clients.map((client, i) => (
-                  <Option key={client._id} value={client.code}>
+                  <Option key={client._id} value={client._id}>
                     {client.code}
                   </Option>
                 ))}

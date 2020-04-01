@@ -1,26 +1,20 @@
 import React, { useState, useContext } from 'react';
-import { Form, Input, Modal } from 'antd';
+import { Form, Input, Modal, message } from 'antd';
 import { UserAddOutlined } from '@ant-design/icons';
 
 import BigSquareButton from '../Buttons/BigSquareButton';
-
 import AuthContext from '../../context/auth-context';
 
 export default function NewClient() {
   const [visible, handleVisible] = useState(false);
-  const [loading, handleLoading] = useState(false);
 
   const [form] = Form.useForm();
   const AUTH_CONTEXT = useContext(AuthContext);
 
-  console.log(AUTH_CONTEXT);
-
   const onModalOpen = () => handleVisible(true);
 
   const onFinish = (values) => {
-    const { code, name } = values;
-
-    createClient(code, name);
+    createClient(values.code, values.name);
   };
 
   const onCancel = () => handleVisible(false);
@@ -50,7 +44,16 @@ export default function NewClient() {
 
     res
       .json()
-      .then((resData) => console.log(resData))
+      .then((resData) => {
+        resData.data.createClient
+          ? message
+              .success(
+                `${resData.data.createClient.code} successfully created`,
+                3
+              )
+              .then(() => handleVisible(false))
+          : message.error('there has been an error', 3);
+      })
       .catch((err) => console.error(err));
   }
 
@@ -58,7 +61,7 @@ export default function NewClient() {
     <div>
       <BigSquareButton
         onClick={onModalOpen}
-        icon={<UserAddOutlined />}
+        icon={<UserAddOutlined style={{ fontSize: '30px' }} />}
         text='NEW CLIENT'
       />
       <Modal
