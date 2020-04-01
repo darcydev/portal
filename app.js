@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const graphqlHttp = require('express-graphql');
@@ -8,7 +10,6 @@ const graphQlResolvers = require('./graphql/resolvers/index');
 const isAuth = require('./middleware/is-auth');
 
 const app = express();
-require('dotenv').config();
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');

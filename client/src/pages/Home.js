@@ -34,7 +34,7 @@ export default function Home() {
             <span>VIEW JOBS</span>
           </div>
         </StyledLink>
-        <StyledLink to='/clients' className='btn__big-square'>
+        <StyledLink to='/graveyard' className='btn__big-square'>
           <div>
             <ProfileOutlined style={{ fontSize: ICON_SIZE }} />
             <span>GRAVEYARD</span>

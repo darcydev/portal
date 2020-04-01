@@ -22,10 +22,6 @@ export default function Jobs() {
           description
           tags
           createdAt
-          client {
-            _id
-            code
-          }
         }
       }
     `

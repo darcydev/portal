@@ -33,6 +33,9 @@ export default function MainNavigation() {
               <li>
                 <NavLink to='/jobs'>Jobs</NavLink>
               </li>
+              <li>
+                <NavLink to='/files'>Files</NavLink>
+              </li>
               <li onClick={() => AUTH_CONTEXT.logout()}>Logout</li>
             </>
           )}
