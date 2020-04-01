@@ -15,8 +15,6 @@ import NewClient from './components/Modals/NewClient';
 import AuthContext from './context/auth-context';
 import Footer from './components/Footer';
 
-const { Header } = Layout;
-
 export default function App() {
   const token = localStorage.getItem('token');
   const userId = localStorage.getItem('userId');
@@ -41,10 +39,12 @@ export default function App() {
         <AuthContext.Provider
           value={{ token: token, userId: userId, login: login, logout: logout }}
         >
-          <Header>
+          <StyledHeader>
             <MainNavigation />
-          </Header>
-          <StyledMain>
+          </StyledHeader>
+          <Layout.Content
+            style={{ maxWidth: 1024, margin: 'auto', minHeight: '90vh' }}
+          >
             <Switch>
               {token ? (
                 <Redirect from='/' to='/home' exact />
@@ -60,7 +60,7 @@ export default function App() {
               {token && <Route path='/jobs' component={JobsPage} />}
               {token && <Route path='/job/:code' component={SingleJobPage} />}
             </Switch>
-          </StyledMain>
+          </Layout.Content>
           <Footer />
         </AuthContext.Provider>
       </>
@@ -68,8 +68,7 @@ export default function App() {
   );
 }
 
-const StyledMain = styled.main`
-  margin: 4rem 2.5rem;
-
-  min-height: 80vh;
+const StyledHeader = styled.header`
+  background: #7cfdfd;
+  padding: 20px;
 `;

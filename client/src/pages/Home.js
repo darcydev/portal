@@ -1,7 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link, useHistory } from 'react-router-dom';
-import { TeamOutlined, FolderOpenOutlined } from '@ant-design/icons';
+import {
+  TeamOutlined,
+  FolderOpenOutlined,
+  ProfileOutlined
+} from '@ant-design/icons';
 
 import NewClient from '../components/Modals/NewClient';
 import NewJob from '../components/Modals/NewJob';
@@ -28,6 +32,12 @@ export default function Home() {
           <div>
             <FolderOpenOutlined style={{ fontSize: ICON_SIZE }} />
             <span>VIEW JOBS</span>
+          </div>
+        </StyledLink>
+        <StyledLink to='/clients' className='btn__big-square'>
+          <div>
+            <ProfileOutlined style={{ fontSize: ICON_SIZE }} />
+            <span>GRAVEYARD</span>
           </div>
         </StyledLink>
       </StyledFlexContainer>
