@@ -1,16 +1,37 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Select, Form, Input, Modal, Upload, message } from 'antd';
-import { FolderAddOutlined, InboxOutlined } from '@ant-design/icons';
+import {
+  Button,
+  Select,
+  Form,
+  Input,
+  Modal,
+  Upload,
+  Radio,
+  Progress,
+  message
+} from 'antd';
+import {
+  FolderAddOutlined,
+  InboxOutlined,
+  DoubleRightOutlined,
+  DoubleLeftOutlined,
+  MinusOutlined,
+  PlusOutlined
+} from '@ant-design/icons';
+import styled from 'styled-components';
 
 import BigSquareButton from '../Buttons/BigSquareButton';
 import AuthContext from '../../context/auth-context';
 
 const { Dragger } = Upload;
 const { Option } = Select;
+const ButtonGroup = Button.Group;
 
 export default function NewJob() {
   const [visible, handleVisible] = useState(false);
   const [clients, handleClients] = useState([]);
+  const [time, setTime] = useState(0);
+  const [budget, setBudget] = useState(0);
 
   const [form] = Form.useForm();
   const AUTH_CONTEXT = useContext(AuthContext);
@@ -22,10 +43,6 @@ export default function NewJob() {
   const onModalOpen = () => handleVisible(true);
 
   const onFinish = (values) => {
-    console.log(values);
-
-    // fetch clientId by clientCode
-
     createJob(
       values.clientId,
       values.code,
@@ -77,8 +94,6 @@ export default function NewJob() {
         `
     };
 
-    console.log(tags);
-
     const res = await fetch('http://localhost:8000/graphql', {
       method: 'POST',
       body: JSON.stringify(requestBody),
@@ -90,7 +105,13 @@ export default function NewJob() {
 
     res
       .json()
-      .then((resData) => console.log(resData))
+      .then((resData) => {
+        resData.data.createJob
+          ? message
+              .success(`${resData.data.createJob.code} successfully created`, 3)
+              .then(() => handleVisible(false))
+          : message.error('there has been an error', 3);
+      })
       .catch((err) => console.error(err));
   }
 
@@ -112,7 +133,7 @@ export default function NewJob() {
             .catch((err) => console.err('Create Job Validate Failed:', err))
         }
       >
-        <Form form={form} layout='horizontal'>
+        <Form form={form} layout='vertical'>
           <Form.Item name='clientId' label='Client'>
             <Select
               showSearch
@@ -138,6 +159,11 @@ export default function NewJob() {
           <Form.Item name='description' label='Job Description'>
             <Input type='textarea' />
           </Form.Item>
+          {/* INFO BOX */}
+          <div className='info-box'>
+            THIS IS AN INFO BOX OF USEFUL INFORMATION TO REMIND PEOPLE
+          </div>
+          {/* .INFO BOX */}
           <Form.Item name='tags' label='Job Tags'>
             <Select
               mode='multiple'
@@ -158,6 +184,77 @@ export default function NewJob() {
               </Option>
             </Select>
           </Form.Item>
+          <Form.Item name='target-audience' label='Target Audience'>
+            <Input type='textarea' />
+          </Form.Item>
+          <Form.Item
+            name='call-to-action'
+            label='Call to action (what do you want people to do as a result of this?)'
+          >
+            <Input type='textarea' />
+          </Form.Item>
+          <Form.Item
+            name='who-sign-off'
+            label='Who should we contact to sign off and provide feedback?'
+          >
+            <Input type='textarea' />
+          </Form.Item>
+          <Form.Item
+            name='previous-jobs'
+            label='Are there any previous jobs you would like to use as a reference? (e.g PN8981 A4 Flyer)'
+          >
+            <Input type='textarea' />
+          </Form.Item>
+          {/* TIME ESTIMATE */}
+          <div>
+            <h4>What is your time frame for the project?</h4>
+            <div className='info-box'>
+              <p>
+                {time < 5
+                  ? 'This is a nice quick job, but we should still mention blah blah blah'
+                  : "As a longer job, it's important to mention BLAH BLAH"}
+              </p>
+            </div>
+            <StyledProgressBar>
+              <Progress
+                percent={time}
+                format={(percent) =>
+                  percent === 0
+                    ? '< 1 week'
+                    : percent === 1
+                    ? `${percent} week`
+                    : `${percent} weeks`
+                }
+              />
+              <ButtonGroup>
+                <Button
+                  onClick={() => setTime(time - 10 < 0 ? 0 : time - 10)}
+                  icon={<DoubleLeftOutlined />}
+                />
+                <Button
+                  onClick={() => setTime(time - 1 < 0 ? 0 : time - 1)}
+                  icon={<MinusOutlined />}
+                />
+                <Button
+                  onClick={() => setTime(time + 1 > 99 ? 99 : time + 1)}
+                  icon={<PlusOutlined />}
+                />
+                <Button
+                  onClick={() => setTime(time + 10 > 99 ? 99 : time + 10)}
+                  icon={<DoubleRightOutlined />}
+                />
+              </ButtonGroup>
+            </StyledProgressBar>
+          </div>
+          {/* .TIME ESTIMATE */}
+          {/* BUDGET ESTIMATE */}
+          <div className='info-box'>
+            <p>
+              Based on these factors, we could assume that the budget for this
+              job will be between
+            </p>
+          </div>
+          {/* .BUDGET ESTIMATE */}
           <Form.Item name='files' label='Relevant Files'>
             <Dragger
               name='file'
@@ -192,3 +289,27 @@ export default function NewJob() {
     </div>
   );
 }
+
+const StyledProgressBar = styled.div`
+  .ant-progress {
+    display: flex;
+    flex-direction: column;
+
+    .ant-progess-outer {
+      padding-right: 0px !important;
+    }
+
+    .ant-progress-text {
+      width: 100%;
+      text-align: center;
+      font-size: 18px;
+      padding: 10px 0;
+    }
+  }
+
+  .ant-btn-group {
+    text-align: center;
+    width: 100%;
+    padding: 10px 0;
+  }
+`;

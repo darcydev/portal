@@ -15,10 +15,9 @@ export default function Home() {
 
   return (
     <div>
-      <div className='banner'>
-        <h1>Welcome to the Portal</h1>
-        <h3>The place to hold all your client information</h3>
-      </div>
+      <StyledBanner>
+        <h1>Client Portal</h1>
+      </StyledBanner>
       <StyledFlexContainer>
         <NewClient />
         <NewJob />
@@ -44,6 +43,16 @@ export default function Home() {
     </div>
   );
 }
+
+const StyledBanner = styled.div`
+  height: 300px;
+  text-align: center;
+  padding: 20px;
+
+  h1 {
+    font-size: 60px;
+  }
+`;
 
 const StyledFlexContainer = styled.div`
   display: flex;

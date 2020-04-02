@@ -19,3 +19,8 @@ code {
   border-radius: 10px;
   margin: 10px;
 }
+
+.info-box {
+  border: 3px dotted red;
+  padding: 5px;
+}
