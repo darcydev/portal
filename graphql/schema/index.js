@@ -18,7 +18,7 @@ type AuthData {
 
 type Client {
   _id: ID!
-  code: String!
+  code: String
   name: String!
   createdAt: String!
   updatedAt: String!
@@ -27,7 +27,7 @@ type Client {
 type Job {
   _id: ID!
   client: Client!
-  code: String!
+  code: String
   title: String!
   description: String!
   tags: [String!]!
@@ -44,13 +44,18 @@ input UserInput {
 }
 
 input ClientInput {
-  code: String!
+  code: String
+  name: String!
+}
+
+input ClientUpdate {
+  code: String
   name: String!
 }
 
 input JobInput {
   client: ID!
-  code: String!
+  code: String
   title: String!
   description: String!
   tags: [String!]!
@@ -59,8 +64,8 @@ input JobInput {
 }
 
 input JobUpdate {
-  code: String!
-  title: String
+  code: String
+  title: String!
   description: String
   tags: [String]
   colors: String
@@ -70,15 +75,16 @@ input JobUpdate {
 type RootQuery {
     login(email: String!, password: String!): AuthData!
     clients: [Client!]!
-    clientByCode(code: String!): Client!
-    jobsByClientId(clientId: String!): [Job!]!
+		clientById(clientId: String!): Client!
     jobs: [Job!]!
-    jobByCode(code: String!): Job!
+		jobById(id: String!): Job!
+		jobsByClientId(clientId: String!): [Job!]!
 }
 
 type RootMutation {
   createUser(userInput: UserInput): User
   createClient(clientInput: ClientInput): Client
+  updateClient(clientUpdate: ClientUpdate): Client
   createJob(jobInput: JobInput): Job
   updateJob(jobUpdate: JobUpdate): Job
 }

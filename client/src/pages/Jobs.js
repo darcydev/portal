@@ -24,15 +24,15 @@ export default function Jobs() {
           createdAt
         }
       }
-    `
+    `,
     };
 
     const res = await fetch('http://localhost:8000/graphql', {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
 
     res
@@ -52,17 +52,17 @@ export default function Jobs() {
           {
             title: 'Code',
             dataIndex: 'code',
-            key: 'code'
+            key: 'code',
           },
           {
             title: 'Title',
             dataIndex: 'title',
-            key: 'title'
+            key: 'title',
           },
           {
             title: 'Description',
             dataIndex: 'description',
-            key: 'description'
+            key: 'description',
           },
           {
             title: 'Tags',
@@ -74,24 +74,24 @@ export default function Jobs() {
                   <CustomTag text={tag} />
                 ))}
               </span>
-            )
+            ),
           },
           {
             title: 'Created',
             dataIndex: 'createdAt',
-            key: 'createdAt'
+            key: 'createdAt',
           },
           {
             title: 'Action',
             key: 'action',
             render: (text, record) => (
               <span>
-                <Link style={{ marginRight: 16 }} to={`/job/${record.code}`}>
+                <Link style={{ marginRight: 16 }} to={`/job/${record.key}`}>
                   Details
                 </Link>
               </span>
-            )
-          }
+            ),
+          },
         ]}
       />
     </div>

@@ -12,9 +12,9 @@ module.exports = {
       throw err;
     }
   },
-  clientByCode: async (args, req) => {
+  clientById: async (args, req) => {
     try {
-      const client = await Client.findOne({ code: args.code });
+      const client = await Client.findOne({ id: args.id });
       if (!client) throw new Error('Client by code not found');
       return transformClient(client);
     } catch (error) {
@@ -31,7 +31,7 @@ module.exports = {
 
     const client = new Client({
       code: args.clientInput.code,
-      name: args.clientInput.name
+      name: args.clientInput.name,
     });
 
     try {
@@ -41,5 +41,5 @@ module.exports = {
     } catch (error) {
       throw error;
     }
-  }
+  },
 };

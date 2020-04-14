@@ -20,15 +20,15 @@ export default function Client() {
           name
         }
       }
-    `
+    `,
     };
 
     const res = await fetch('http://localhost:8000/graphql', {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
 
     res
@@ -48,24 +48,24 @@ export default function Client() {
           {
             title: 'Name',
             dataIndex: 'name',
-            key: 'name'
+            key: 'name',
           },
           {
             title: 'Code',
             dataIndex: 'code',
-            key: 'code'
+            key: 'code',
           },
           {
             title: 'Action',
             key: 'action',
             render: (text, record) => (
               <span>
-                <Link style={{ marginRight: 16 }} to={`/client/${record.code}`}>
+                <Link style={{ marginRight: 16 }} to={`/client/${record.key}`}>
                   Details
                 </Link>
               </span>
-            )
-          }
+            ),
+          },
         ]}
       />
     </div>

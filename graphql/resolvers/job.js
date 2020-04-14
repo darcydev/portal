@@ -11,13 +11,15 @@ module.exports = {
       throw error;
     }
   },
-  jobByCode: async (args, req) => {
+  jobById: async (args, req) => {
     try {
-      const job = await Job.findOne({ code: args.code });
-      if (!job) throw new Error('Job by code not found');
+      console.log('args :', args);
+      const job = await Job.findById(args.id);
+      // const job = await Job.findById(args.id);
+      if (!job) throw new Error('Job by ID not found');
       return transformJob(job);
-    } catch (error) {
-      throw error;
+    } catch (err) {
+      throw err;
     }
   },
   jobsByClientId: async (args, req) => {
@@ -45,7 +47,7 @@ module.exports = {
       description: args.jobInput.description,
       tags: args.jobInput.tags,
       colors: args.jobInput.colors,
-      files: args.jobInput.files
+      files: args.jobInput.files,
     });
 
     try {
@@ -73,5 +75,5 @@ module.exports = {
     } catch (error) {
       throw error;
     }
-  }
+  },
 };

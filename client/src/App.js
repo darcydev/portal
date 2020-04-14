@@ -55,10 +55,10 @@ export default function App() {
               {token && <Route path='/home' component={HomePage} />}
               {token && <Route path='/clients' component={ClientsPage} />}
               {token && (
-                <Route path='/client/:code' component={SingleClientPage} />
+                <Route path='/client/:id' component={SingleClientPage} />
               )}
               {token && <Route path='/jobs' component={JobsPage} />}
-              {token && <Route path='/job/:code' component={SingleJobPage} />}
+              {token && <Route path='/job/:id' component={SingleJobPage} />}
             </Switch>
           </Layout.Content>
           <Footer />

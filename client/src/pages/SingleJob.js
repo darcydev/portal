@@ -7,18 +7,18 @@ import styled from 'styled-components';
 export default function SingleJob() {
   const [job, handleJob] = useState(null);
 
-  const { code } = useParams();
+  const { id } = useParams();
 
   useEffect(() => {
-    fetchJobByCode();
+    fetchJobById();
   }, []);
 
-  async function fetchJobByCode() {
+  async function fetchJobById() {
     let requestBody = {
       query: `
-      query {
-        jobByCode(code: "${code}") {
-          _id
+			query {
+				jobById(id: "${id}") {
+					_id
           client {
             _id
             name
@@ -32,23 +32,24 @@ export default function SingleJob() {
           files
           createdAt
           updatedAt
-        }
-      }
-      `
+				}
+			}
+			`,
     };
 
     const res = await fetch('http://localhost:8000/graphql', {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
 
     res
       .json()
       .then((resData) => {
-        handleJob(resData.data.jobByCode);
+        if (!resData.data) throw new Error('SingleJob data not returned');
+        handleJob(resData.data.jobById);
       })
       .catch((err) => console.error(err));
   }
@@ -61,14 +62,14 @@ export default function SingleJob() {
         className='site-page-header-responsive'
         onBack={() => window.history.back()}
         title={job ? job.title : 'Loading'}
-        subTitle={`Client Code: ${code}`}
+        subTitle={job ? `Client Code: ${job.code}` : 'No code yet'}
         extra={[
           <Button key='2' type='primary'>
             Update
           </Button>,
           <Button key='1' type='danger'>
             Delete
-          </Button>
+          </Button>,
         ]}
         footer={
           <Tabs>
@@ -111,7 +112,6 @@ export default function SingleJob() {
             </Tabs.TabPane>
             <Tabs.TabPane tab='Graveyard' key='3'>
               <StyledTabContent>
-                {' '}
                 <StyledFlexContainer>
                   <Card
                     hoverable

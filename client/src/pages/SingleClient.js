@@ -6,43 +6,44 @@ export default function SingleClient() {
   const [client, handleClient] = useState(null);
   const [jobs, handleJobs] = useState([]);
 
-  const { code } = useParams();
+  const { id } = useParams();
 
   useEffect(() => {
-    fetchClientByCode();
+    fetchClientById();
   }, []);
 
-  async function fetchClientByCode() {
-    let requestBody = {
+  async function fetchClientById() {
+    const requestBody = {
       query: `
-      query {
-        clientByCode(code: "${code}") {
-          _id
-          name
-          createdAt
-          updatedAt
-        }
-      }
-      `
+			query {
+				clientById(clientId: "${id}") {
+					_id
+					name
+					createdAt
+					updatedAt
+				}
+			}
+			`,
     };
 
     const res = await fetch('http://localhost:8000/graphql', {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
 
     res
       .json()
       .then((resData) => {
-        handleClient(resData.data.clientByCode);
+        handleClient(resData.data.clientById);
         fetchJobsByClientId(resData.data.clientByCode._id);
       })
       .catch((err) => console.error(err));
   }
 
+  // TODO
   async function fetchJobsByClientId(clientId) {
     let requestBody = {
       query: `
@@ -55,15 +56,15 @@ export default function SingleClient() {
           tags
           files
         }
-      }`
+      }`,
     };
 
     const res = await fetch('http://localhost:8000/graphql', {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
 
     res
@@ -78,7 +79,11 @@ export default function SingleClient() {
         className='site-page-header-responsive'
         onBack={() => window.history.back()}
         title={client ? client.name : 'Loading'}
-        subTitle={`Client Code: ${code}`}
+        subTitle={
+          client
+            ? `Client Code: ${client.code}`
+            : 'Client Code not assigned yet'
+        }
         extra={[
           <Button key='3' type='primary'>
             Add Job
@@ -88,7 +93,7 @@ export default function SingleClient() {
           </Button>,
           <Button key='1' type='danger'>
             Delete
-          </Button>
+          </Button>,
         ]}
         footer={
           <Tabs>
@@ -98,23 +103,23 @@ export default function SingleClient() {
                 // change the key name (from _id to key) in an array of objects
                 dataSource={jobs.map(({ _id: key, ...rest }) => ({
                   key,
-                  ...rest
+                  ...rest,
                 }))}
                 columns={[
                   {
                     title: 'Code',
                     dataIndex: 'code',
-                    key: 'code'
+                    key: 'code',
                   },
                   {
                     title: 'Title',
                     dataIndex: 'title',
-                    key: 'title'
+                    key: 'title',
                   },
                   {
                     title: 'Description',
                     dataIndex: 'Description',
-                    key: 'description'
+                    key: 'description',
                   },
                   {
                     title: 'Tags',
@@ -134,7 +139,7 @@ export default function SingleClient() {
                           );
                         })}
                       </span>
-                    )
+                    ),
                   },
                   {
                     title: 'Action',
@@ -146,13 +151,19 @@ export default function SingleClient() {
                       >
                         Details
                       </Link>
-                    )
-                  }
+                    ),
+                  },
                 ]}
               />
             </Tabs.TabPane>
-            <Tabs.TabPane tab='Details' key='2'>
-              two
+            <Tabs.TabPane tab='color-swatch' key='2'>
+              Style Guide
+            </Tabs.TabPane>
+            <Tabs.TabPane tab='color-swatch' key='3'>
+              Color Swatch
+            </Tabs.TabPane>
+            <Tabs.TabPane tab='logos' key='4'>
+              Logos
             </Tabs.TabPane>
           </Tabs>
         }

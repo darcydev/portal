@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@ant-design/icons": "^4.0.5",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
-    "antd": "^4.1.0",
+    "@ant-design/icons": "^4.0.6",
+    "@testing-library/jest-dom": "^5.5.0",
+    "@testing-library/react": "^10.0.2",
+    "@testing-library/user-event": "^10.0.1",
+    "antd": "^4.1.3",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.28",
     "react": "^16.13.1",
@@ -15,7 +15,7 @@
     "react-moment": "^0.9.7",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
-    "styled-components": "^5.0.1",
+    "styled-components": "^5.1.0",
     "styled-media-query": "^2.1.2"
   },
   "scripts": {
