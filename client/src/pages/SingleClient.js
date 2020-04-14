@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { PageHeader, Table, Tag, Tabs, Button, Descriptions } from 'antd';
 
+import NewJob from '../components/Modals/NewJob';
+
 export default function SingleClient() {
   const [client, handleClient] = useState(null);
   const [jobs, handleJobs] = useState([]);
@@ -85,9 +87,7 @@ export default function SingleClient() {
             : 'Client Code not assigned yet'
         }
         extra={[
-          <Button key='3' type='primary'>
-            Add Job
-          </Button>,
+          <NewJob />,
           <Button key='2' type='primary'>
             Update
           </Button>,
@@ -156,13 +156,13 @@ export default function SingleClient() {
                 ]}
               />
             </Tabs.TabPane>
-            <Tabs.TabPane tab='color-swatch' key='2'>
+            <Tabs.TabPane tab='Style Guide' key='2'>
               Style Guide
             </Tabs.TabPane>
-            <Tabs.TabPane tab='color-swatch' key='3'>
+            <Tabs.TabPane tab='Color Swatch' key='3'>
               Color Swatch
             </Tabs.TabPane>
-            <Tabs.TabPane tab='logos' key='4'>
+            <Tabs.TabPane tab='Logos' key='4'>
               Logos
             </Tabs.TabPane>
           </Tabs>

@@ -13,9 +13,7 @@ module.exports = {
   },
   jobById: async (args, req) => {
     try {
-      console.log('args :', args);
       const job = await Job.findById(args.id);
-      // const job = await Job.findById(args.id);
       if (!job) throw new Error('Job by ID not found');
       return transformJob(job);
     } catch (err) {

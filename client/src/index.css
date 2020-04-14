@@ -24,3 +24,9 @@ code {
   border: 3px dotted red;
   padding: 5px;
 }
+
+/* ANT DESIGN OVERRIDES */
+.ant-modal {
+  width: 90% !important;
+}
+/* .ANT DESIGN OVERRIDES */
