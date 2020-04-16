@@ -1,33 +1,13 @@
 import React, { useState, useContext, useEffect } from 'react';
-import {
-  Button,
-  Select,
-  Form,
-  Input,
-  Upload,
-  Radio,
-  Progress,
-  message,
-} from 'antd';
-import {
-  InboxOutlined,
-  DoubleRightOutlined,
-  DoubleLeftOutlined,
-  MinusOutlined,
-  PlusOutlined,
-} from '@ant-design/icons';
-import styled from 'styled-components';
+import { Button, Select, Form, Input, message } from 'antd';
 
 import AuthContext from '../../context/auth-context';
+import FileDrop from '../DataEntry/FileDrop';
 
-const { Dragger } = Upload;
 const { Option } = Select;
-const ButtonGroup = Button.Group;
 
 export default function NewJob() {
   const [clients, handleClients] = useState([]);
-  const [time, setTime] = useState(0);
-  const [budget, setBudget] = useState(0);
   const [form] = Form.useForm();
   const AUTH_CONTEXT = useContext(AuthContext);
 
@@ -49,12 +29,13 @@ export default function NewJob() {
 					clients {
 						_id
 						code
+						name
 					}
 				}
 			`,
     };
 
-    const res = await fetch('http://localhost:8000/graphql', {
+    const res = await fetch('http://localhost:8000/api/graphql', {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
@@ -68,7 +49,6 @@ export default function NewJob() {
       .catch((err) => console.error(err));
   }
 
-  // create client in backend
   async function createJob(values) {
     const { clientId, code, title, description, tags } = values;
 
@@ -83,7 +63,7 @@ export default function NewJob() {
         `,
     };
 
-    const res = await fetch('http://localhost:8000/graphql', {
+    const res = await fetch('http://localhost:8000/api/graphql', {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
@@ -95,6 +75,8 @@ export default function NewJob() {
     res
       .json()
       .then((resData) => {
+        console.log('resData :', resData);
+
         resData.data.createJob
           ? message.success(
               `${resData.data.createJob.code} successfully created`,
@@ -105,11 +87,13 @@ export default function NewJob() {
       .catch((err) => console.error(err));
   }
 
-  console.log('clients', clients);
-
   return (
     <Form form={form} layout='vertical' onFinish={onFinish}>
-      <Form.Item name='clientId' label='Client'>
+      <Form.Item
+        name='clientId'
+        label='Client'
+        rules={[{ required: true, message: 'Please select the Client' }]}
+      >
         <Select
           showSearch
           optionFilterProp='children'
@@ -120,7 +104,7 @@ export default function NewJob() {
           {clients &&
             clients.map((client, i) => (
               <Option key={client._id} value={client._id}>
-                {client.name}
+                {client.name} ({client.code})
               </Option>
             ))}
         </Select>
@@ -128,7 +112,11 @@ export default function NewJob() {
       <Form.Item name='code' label='Job Code'>
         <Input type='textarea' />
       </Form.Item>
-      <Form.Item name='title' label='Job Title'>
+      <Form.Item
+        name='title'
+        label='Job Title'
+        rules={[{ required: true, message: 'Please enter Job title' }]}
+      >
         <Input type='textarea' />
       </Form.Item>
       <Form.Item name='description' label='Job Description'>
@@ -175,71 +163,8 @@ export default function NewJob() {
       >
         <Input type='textarea' />
       </Form.Item>
-      {/* TIME ESTIMATE */}
-      {/* <div>
-        <h4>What is your time frame for the project?</h4>
-        <div className='info-box'>
-          <p>
-            {time < 5
-              ? 'This is a nice quick job, but we should still mention blah blah blah'
-              : "As a longer job, it's important to mention BLAH BLAH"}
-          </p>
-        </div>
-        <StyledProgressBar>
-          <Progress
-            percent={time}
-            format={(percent) =>
-              percent === 0
-                ? '< 1 week'
-                : percent === 1
-                ? `${percent} week`
-                : `${percent} weeks`
-            }
-          />
-          <ButtonGroup>
-            <Button
-              onClick={() => setTime(time - 10 < 0 ? 0 : time - 10)}
-              icon={<DoubleLeftOutlined />}
-            />
-            <Button
-              onClick={() => setTime(time - 1 < 0 ? 0 : time - 1)}
-              icon={<MinusOutlined />}
-            />
-            <Button
-              onClick={() => setTime(time + 1 > 99 ? 99 : time + 1)}
-              icon={<PlusOutlined />}
-            />
-            <Button
-              onClick={() => setTime(time + 10 > 99 ? 99 : time + 10)}
-              icon={<DoubleRightOutlined />}
-            />
-          </ButtonGroup>
-        </StyledProgressBar>
-      </div> */}
-      {/* .TIME ESTIMATE */}
       <Form.Item name='files' label='Relevant Files'>
-        <Dragger
-          name='file'
-          multiple={true}
-          action='https://www.mocky.io/v2/5cc8019d300000980a055e76'
-          onChange={(info) => {
-            const { status } = info.file;
-
-            if (status !== 'uploading') console.log(info.file, info.fileList);
-            if (status !== 'done') {
-              message.success(`${info.file.name} file uploaded successfully.`);
-            } else if (status !== 'error')
-              message.error(`${info.file.name} file upload failed`);
-          }}
-        >
-          <p className='ant-upload-drag-icon'>
-            <InboxOutlined />
-          </p>
-          <p className='ant-upload-text'>
-            Click or drag file to this area to upload
-          </p>
-          <p className='ant-upload-hint'>Support for a single or bulk upload</p>
-        </Dragger>
+        <FileDrop />
       </Form.Item>
       <Form.Item>
         <Button type='primary' htmlType='submit'>
@@ -249,27 +174,3 @@ export default function NewJob() {
     </Form>
   );
 }
-
-const StyledProgressBar = styled.div`
-  .ant-progress {
-    display: flex;
-    flex-direction: column;
-
-    .ant-progess-outer {
-      padding-right: 0px !important;
-    }
-
-    .ant-progress-text {
-      width: 100%;
-      text-align: center;
-      font-size: 18px;
-      padding: 10px 0;
-    }
-  }
-
-  .ant-btn-group {
-    text-align: center;
-    width: 100%;
-    padding: 10px 0;
-  }
-`;

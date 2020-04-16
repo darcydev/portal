@@ -22,15 +22,15 @@ export default function Auth() {
             tokenExpiration
           }
         }
-      `
+      `,
     };
 
-    fetch('http://localhost:8000/graphql', {
+    fetch('http://localhost:8000/api/graphql', {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     })
       .then((res) => {
         if (res.status !== 200 && res.status !== 201) throw new Error('Failed');
@@ -61,12 +61,12 @@ export default function Auth() {
         rules={[
           {
             type: 'email',
-            message: 'Please enter valid email'
+            message: 'Please enter valid email',
           },
           {
             required: true,
-            message: 'Please enter email'
-          }
+            message: 'Please enter email',
+          },
         ]}
       >
         <Input />
@@ -77,8 +77,8 @@ export default function Auth() {
         rules={[
           {
             required: true,
-            message: 'Please enter password'
-          }
+            message: 'Please enter password',
+          },
         ]}
       >
         <Input.Password />

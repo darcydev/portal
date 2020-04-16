@@ -5,7 +5,7 @@ import Moment from 'react-moment';
 import styled from 'styled-components';
 
 export default function SingleJob() {
-  const [job, handleJob] = useState(null);
+  const [job, setJob] = useState(null);
 
   const { id } = useParams();
 
@@ -37,7 +37,7 @@ export default function SingleJob() {
 			`,
     };
 
-    const res = await fetch('http://localhost:8000/graphql', {
+    const res = await fetch('http://localhost:8000/api/graphql', {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
@@ -48,13 +48,13 @@ export default function SingleJob() {
     res
       .json()
       .then((resData) => {
-        if (!resData.data) throw new Error('SingleJob data not returned');
-        handleJob(resData.data.jobById);
+        if (!resData.data)
+          throw new Error(`SingleJob error: ${resData.errors[0].message}`);
+
+        setJob(resData.data.jobById);
       })
       .catch((err) => console.error(err));
   }
-
-  console.log(job);
 
   return (
     <div>
@@ -62,7 +62,7 @@ export default function SingleJob() {
         className='site-page-header-responsive'
         onBack={() => window.history.back()}
         title={job ? job.title : 'Loading'}
-        subTitle={job ? `Client Code: ${job.code}` : 'No code yet'}
+        subTitle={job ? `Job Code: ${job.code}` : 'No code yet'}
         extra={[
           <Button key='2' type='primary'>
             Update

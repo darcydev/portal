@@ -37,7 +37,7 @@ export default function NewClient() {
         `,
     };
 
-    const res = await fetch('http://localhost:8000/graphql', {
+    const res = await fetch('http://localhost:8000/api/graphql', {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
