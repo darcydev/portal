@@ -9,8 +9,10 @@ import ClientsPage from './pages/Clients';
 import SingleClientPage from './pages/SingleClient';
 import JobsPage from './pages/Jobs';
 import SingleJobPage from './pages/SingleJob';
+import FilesPage from './pages/Files';
+import SingleFilePage from './pages/SingleFile';
+
 import MainNavigation from './components/Navigation/MainNavigation';
-import NewClient from './components/Modals/NewClient';
 
 import AuthContext from './context/auth-context';
 import Footer from './components/Footer';
@@ -59,6 +61,8 @@ export default function App() {
               )}
               {token && <Route path='/jobs' component={JobsPage} />}
               {token && <Route path='/job/:id' component={SingleJobPage} />}
+              {token && <Route path='/files' component={FilesPage} />}
+              {token && <Route path='/file/:id' component={SingleFilePage} />}
             </Switch>
           </Layout.Content>
           <Footer />

@@ -37,6 +37,18 @@ type Job {
   updatedAt: String!
 }
 
+type File {
+	_id: ID!
+	job: Job!
+	url: String!
+	name: String!
+	description: String
+	type: String!
+	tags: [String!]!
+	createdAt: String!
+	updatedAt: String!
+}
+
 input UserInput {
   email: String!
   password: String!

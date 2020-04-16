@@ -1,16 +1,13 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import media from 'styled-media-query';
-import { UpOutlined, DownOutlined } from '@ant-design/icons';
 
 import AuthContext from '../../context/auth-context';
 
 import './MainNavigation.css';
 
 export default function MainNavigation() {
-  const [isOpen, toggleOpen] = useState(false);
-
   const AUTH_CONTEXT = useContext(AuthContext);
 
   return (

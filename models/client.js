@@ -6,15 +6,15 @@ const clientSchema = new Schema(
   {
     code: {
       type: String,
-      required: true
+      required: true,
     },
     name: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 
