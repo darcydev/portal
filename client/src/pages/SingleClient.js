@@ -3,11 +3,11 @@ import { useParams, Link } from 'react-router-dom';
 import { PageHeader, Table, Tag, Tabs, Button, Descriptions } from 'antd';
 
 import NewJob from '../components/Modals/NewJob';
+import UpdateClient from '../components/Modals/UpdateClient';
 
 export default function SingleClient() {
   const [client, handleClient] = useState(null);
   const [jobs, handleJobs] = useState([]);
-
   const { id } = useParams();
 
   useEffect(() => {
@@ -18,8 +18,9 @@ export default function SingleClient() {
     const requestBody = {
       query: `
 			query {
-				clientById(clientId: "${id}") {
+				clientById(id: "${id}") {
 					_id
+					code
 					name
 					createdAt
 					updatedAt
@@ -88,9 +89,7 @@ export default function SingleClient() {
         }
         extra={[
           <NewJob />,
-          <Button key='2' type='primary'>
-            Update
-          </Button>,
+          <UpdateClient client={client} />,
           <Button key='1' type='danger'>
             Delete
           </Button>,

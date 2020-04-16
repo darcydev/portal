@@ -5,7 +5,7 @@ import { SearchOutlined } from '@ant-design/icons';
 export default function BigSquareButton({
   icon = <SearchOutlined style={{ fontSize: '30px' }} />,
   text = 'default',
-  onClick
+  onClick,
 }) {
   return (
     <StyledButton onClick={onClick} className='btn__big-square'>
@@ -18,8 +18,8 @@ export default function BigSquareButton({
 }
 
 const StyledButton = styled.button`
-  width: 200px;
-  height: 160px;
+  width: 120px;
+  height: 80px;
   background: rgb(170, 170, 170);
   border-radius: 10px;
 

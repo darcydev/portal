@@ -1,5 +1,4 @@
 const Client = require('../../models/client');
-const User = require('../../models/user');
 
 const { transformClient } = require('./merge');
 
@@ -14,7 +13,7 @@ module.exports = {
   },
   clientById: async (args, req) => {
     try {
-      const client = await Client.findOne({ id: args.id });
+      const client = await Client.findById(args.id);
       if (!client) throw new Error('Client by code not found');
       return transformClient(client);
     } catch (error) {
@@ -22,12 +21,10 @@ module.exports = {
     }
   },
   createClient: async (args, req) => {
-    // check user is auth
     if (!req.isAuth) throw new Error('User is not authenticated');
 
-    // TODO check code is unique
-    const existingCode = await Client.findOne({ code: args.clientInput.code });
-    if (existingCode) throw new Error('Client code already exists');
+    const existingName = await Client.findOne({ code: args.clientInput.name });
+    if (existingName) throw new Error('Client name already exists');
 
     const client = new Client({
       code: args.clientInput.code,
@@ -38,6 +35,24 @@ module.exports = {
       const result = await client.save();
       createdClient = transformClient(result);
       return createdClient;
+    } catch (error) {
+      throw error;
+    }
+  },
+  updateClient: async (args, req) => {
+    if (!req.isAuth) throw new Error('User is not authenticated');
+    const { code, name } = args.clientUpdate;
+
+    console.log('name :', args);
+
+    const client = await Client.findOne({ name: name });
+    if (!client) throw new Error('Client name not found');
+
+    if (code) client.code = code;
+
+    try {
+      const result = await client.save();
+      return transformClient(result);
     } catch (error) {
       throw error;
     }

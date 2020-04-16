@@ -105,6 +105,8 @@ export default function NewJob() {
       .catch((err) => console.error(err));
   }
 
+  console.log('clients', clients);
+
   return (
     <Form form={form} layout='vertical' onFinish={onFinish}>
       <Form.Item name='clientId' label='Client'>
@@ -118,7 +120,7 @@ export default function NewJob() {
           {clients &&
             clients.map((client, i) => (
               <Option key={client._id} value={client._id}>
-                {client.code}
+                {client.name}
               </Option>
             ))}
         </Select>

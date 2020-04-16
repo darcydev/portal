@@ -1,34 +1,25 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Form, Input, Modal, message } from 'antd';
 import { UserAddOutlined } from '@ant-design/icons';
+import { useParams, Link } from 'react-router-dom';
 
 import BigSquareButton from '../Buttons/BigSquareButton';
 import AuthContext from '../../context/auth-context';
 
-export default function NewClient() {
+export default function UpdateClient({ client }) {
   const [visible, handleVisible] = useState(false);
-
   const [form] = Form.useForm();
   const AUTH_CONTEXT = useContext(AuthContext);
 
   const onModalOpen = () => handleVisible(true);
-
-  const onFinish = (values) => {
-    createClient(values);
-  };
-
+  const onFinish = (values) => updateClient(values);
   const onCancel = () => handleVisible(false);
 
-  async function createClient(values) {
-    let { code, name } = values;
-
-    // if the Client doesn't have a code yet, give it a default code of '0'
-    if (code === undefined) code = '0';
-
+  async function updateClient(values) {
     let requestBody = {
       query: `
           mutation { 
-            createClient(clientInput: {code: "${code}", name: "${name}"}) {
+            updateClient(clientUpdate: {code: "${values.code}", name: "${client.name}"}) {
               _id
               code
               name
@@ -49,10 +40,12 @@ export default function NewClient() {
     res
       .json()
       .then((resData) => {
-        resData.data.createClient
+        console.log('resData :', resData);
+
+        resData.data.updateClient
           ? message
               .success(
-                `${resData.data.createClient.name} successfully created`,
+                `${resData.data.updateClient.name} successfully updated`,
                 6
               )
               .then(() => handleVisible(false))
@@ -69,11 +62,11 @@ export default function NewClient() {
       <BigSquareButton
         onClick={onModalOpen}
         icon={<UserAddOutlined style={{ fontSize: '30px' }} />}
-        text='NEW CLIENT'
+        text='UPDATE'
       />
       <Modal
         visible={visible}
-        title='Create a Client'
+        title='Update Client details'
         onCancel={onCancel}
         onOk={() =>
           form
@@ -88,14 +81,17 @@ export default function NewClient() {
             label='Client Code'
             rules={[{ required: false }]}
           >
-            <Input type='textarea' />
+            <Input
+              type='textarea'
+              defaultValue={client ? (client.code ? client.code : '0') : null}
+            />
           </Form.Item>
-          <Form.Item
-            name='name'
-            label='Client Name'
-            rules={[{ required: true, message: 'Client name required' }]}
-          >
-            <Input type='textarea' />
+          <Form.Item name='name' label='Client Name'>
+            <Input
+              type='textarea'
+              disabled={true}
+              defaultValue={client ? client.name : null}
+            />
           </Form.Item>
         </Form>
       </Modal>
