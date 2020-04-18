@@ -1,18 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 import { List, Table, Button, Input } from 'antd';
-import { DownloadOutlined } from '@ant-design/icons';
-
-const IconText = ({ icon, text }) => (
-  <span>
-    {React.createElement(icon, { style: { marginRight: 8 } })}
-    {text}
-  </span>
-);
 
 export default function Files() {
   const data = [];
-  for (let i = 0; i < 100; i++) {
+  for (let i = 1; i < 100; i++) {
     data.push({
       href: 'http://ant.design',
       title: `File ${i}`,
@@ -20,8 +13,14 @@ export default function Files() {
     });
   }
 
+  // TODO fetch files
+
+  // TODO fetch job codes
+
+  // TODO fetch clients
+
   return (
-    <div>
+    <StyledContainer>
       <h1>files page</h1>
       <section className='files-section'>
         <div className='search-and-filter'>
@@ -58,13 +57,6 @@ export default function Files() {
             <Link to={`/file/TODO`}>
               <List.Item
                 key={item.title}
-                actions={[
-                  <IconText
-                    icon={DownloadOutlined}
-                    text='45'
-                    key='list-vertical-message'
-                  />,
-                ]}
                 extra={
                   <img
                     width={272}
@@ -89,6 +81,17 @@ export default function Files() {
           }}
         ></List>
       </section>
-    </div>
+    </StyledContainer>
   );
 }
+
+const StyledContainer = styled.div`
+  .search-and-filter {
+    display: flex;
+    justify-content: space-between;
+
+    .ant-input-search {
+      margin: 0 10px;
+    }
+  }
+`;

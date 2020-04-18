@@ -4,11 +4,12 @@ import { Link, useHistory } from 'react-router-dom';
 import {
   TeamOutlined,
   FolderOpenOutlined,
-  ProfileOutlined
+  ProfileOutlined,
 } from '@ant-design/icons';
 
 import NewClient from '../components/Modals/NewClient';
 import NewJob from '../components/Modals/NewJob';
+import FileUpload from '../components/DataEntry/FileUpload';
 
 export default function Home() {
   const ICON_SIZE = '30px';
@@ -19,6 +20,7 @@ export default function Home() {
         <h1>Client Portal</h1>
       </StyledBanner>
       <StyledFlexContainer>
+        <FileUpload />
         <NewClient />
         <NewJob />
         <StyledLink to='/clients' className='btn__big-square'>

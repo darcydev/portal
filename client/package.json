@@ -8,6 +8,7 @@
     "@testing-library/react": "^10.0.2",
     "@testing-library/user-event": "^10.0.1",
     "antd": "^4.1.3",
+    "axios": "^0.19.2",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.28",
     "re-resizable": "^6.3.2",
@@ -16,6 +17,7 @@
     "react-moment": "^0.9.7",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
+    "reactstrap": "^8.4.1",
     "styled-components": "^5.1.0",
     "styled-media-query": "^2.1.2"
   },

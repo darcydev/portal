@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { Button, Select, Form, Input, message } from 'antd';
 
 import AuthContext from '../../context/auth-context';
-import FileDrop from '../DataEntry/FileDrop';
+import FileUpload from '../DataEntry/FileUpload';
 
 const { Option } = Select;
 
@@ -164,7 +164,7 @@ export default function NewJob() {
         <Input type='textarea' />
       </Form.Item>
       <Form.Item name='files' label='Relevant Files'>
-        <FileDrop />
+        <FileUpload />
       </Form.Item>
       <Form.Item>
         <Button type='primary' htmlType='submit'>
