@@ -1,126 +1,43 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import $ from 'jquery';
+import React from 'react';
+import { Upload, message } from 'antd';
+import { InboxOutlined } from '@ant-design/icons';
 
-class Home extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedFile: null,
-      selectedFiles: null,
-    };
-  }
-
-  singleFileChangedHandler = (event) => {
-    this.setState({
-      selectedFile: event.target.files[0],
-    });
-  };
-
-  multipleFileChangedHandler = (event) => {
-    this.setState({
-      selectedFiles: event.target.files,
-    });
-    console.log(event.target.files);
-  };
-
-  singleFileUploadHandler = (event) => {
-    const data = new FormData();
-    // If file selected
-    if (this.state.selectedFile) {
-      data.append(
-        'profileImage',
-        this.state.selectedFile,
-        this.state.selectedFile.name
-      );
-      axios
-        .post('http://localhost:8000/api/s3/upload', data, {
-          headers: {
-            accept: 'application/json',
-            'Accept-Language': 'en-US,en;q=0.8',
-            'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
-          },
-        })
-        .then((response) => {
-          console.log('response :', response);
-          if (200 === response.status) {
-            // If file size is larger than expected.
-            if (response.data.error) {
-              if ('LIMIT_FILE_SIZE' === response.data.error.code) {
-                this.ocShowAlert('Max size: 2MB', 'red');
-              } else {
-                console.log(response.data);
-                // If not the given file type
-                this.ocShowAlert(response.data.error, 'red');
-              }
-            } else {
-              // Success
-              let fileName = response.data;
-              console.log('filedata', fileName);
-              this.ocShowAlert('File Uploaded', '#3089cf');
-            }
-          }
-        })
-        .catch((error) => {
-          // If another error
-          this.ocShowAlert(error, 'red');
-        });
-    } else {
-      // if file not selected throw error
-      this.ocShowAlert('Please upload file', 'red');
-    }
-  };
-
-  // ShowAlert Function
-  ocShowAlert = (message, background = '#3089cf') => {
-    let alertContainer = document.querySelector('#oc-alert-container'),
-      alertEl = document.createElement('div'),
-      textNode = document.createTextNode(message);
-    alertEl.setAttribute('class', 'oc-alert-pop-up');
-    $(alertEl).css('background', background);
-    alertEl.appendChild(textNode);
-    alertContainer.appendChild(alertEl);
-    setTimeout(function () {
-      $(alertEl).fadeOut('slow');
-      $(alertEl).remove();
-    }, 3000);
-  };
-
-  render() {
-    console.log(this.state);
-    return (
-      <div className='container'>
-        {/* For Alert box*/}
-        <div id='oc-alert-container'></div>
-        {/* Single File Upload*/}
-        <div
-          className='card border-light mb-3 mt-5'
-          style={{ boxShadow: '0 5px 10px 2px rgba(195,192,192,.5)' }}
-        >
-          <div className='card-header'>
-            <h3 style={{ color: '#555', marginLeft: '12px' }}>
-              Single Image Upload
-            </h3>
-            <p className='text-muted' style={{ marginLeft: '12px' }}>
-              Upload Size: 250px x 250px ( Max 2MB )
-            </p>
-          </div>
-          <div className='card-body'>
-            <p className='card-text'>Please upload an image for your profile</p>
-            <input type='file' onChange={this.singleFileChangedHandler} />
-            <div className='mt-5'>
-              <button
-                className='btn btn-info'
-                onClick={this.singleFileUploadHandler}
-              >
-                Upload!
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+export default function FileUpload() {
+  return (
+    <Upload.Dragger {...props}>
+      <p className='ant-upload-drag-icon'>
+        <InboxOutlined />
+      </p>
+      <p className='ant-upload-text'>
+        Click or drag file to this area to upload
+      </p>
+      <p className='ant-upload-hint'>
+        Support for a single or bulk upload. Strictly prohibit from uploading
+        company data or other band files
+      </p>
+    </Upload.Dragger>
+  );
 }
 
-export default Home;
+const props = {
+  name: 'file-upload',
+  multiple: true,
+  action: 'http://localhost:8000/api/s3/upload',
+  onChange(info) {
+    const { response, status } = info.file;
+    if (status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (status === 'done') {
+      if (response.error) {
+        message.error(
+          `${info.file.name} file upload failed: ${response.error.name}: ${response.error.message}`
+        );
+      } else {
+        message.success(`${info.file.name} file uploaded successfully.`);
+      }
+    } else if (status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  },
+};

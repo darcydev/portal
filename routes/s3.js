@@ -3,7 +3,6 @@ const aws = require('aws-sdk');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 const path = require('path');
-const url = require('url');
 
 // express.Router() creates a modular, mountable route handlers
 const router = express.Router();
@@ -14,8 +13,7 @@ const s3 = new aws.S3({
   Bucket: process.env.AWS_S3_BUCKET_NAME,
 });
 
-/* SINGLE UPLOAD */
-const profileImgUpload = multer({
+const singleUpload = multer({
   storage: multerS3({
     s3: s3,
     bucket: process.env.AWS_S3_BUCKET_NAME,
@@ -31,28 +29,10 @@ const profileImgUpload = multer({
     },
   }),
   limits: { fileSize: 2000000 }, // In bytes: 2000000 bytes = 2 MB
-  fileFilter: function (req, file, cb) {
-    // TODO: do we want to limit file type?
-    checkFileType(file, cb);
-  },
-}).single('profileImage');
-
-function checkFileType(file, cb) {
-  // Allowed ext
-  const filetypes = /jpeg|jpg|png|gif/;
-  // Check ext
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  // Check mime
-  const mimetype = filetypes.test(file.mimetype);
-  if (mimetype && extname) {
-    return cb(null, true);
-  } else {
-    cb('Error: Images Only!');
-  }
-}
+}).single('file-upload');
 
 router.post('/upload', (req, res) => {
-  profileImgUpload(req, res, (error) => {
+  singleUpload(req, res, (error) => {
     console.log('req :', req.file);
     console.log('error', error);
     if (error) {
