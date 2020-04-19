@@ -7,14 +7,14 @@ import AuthContext from '../../context/auth-context';
 export default function FileUpload() {
   const AUTH_CONTEXT = useContext(AuthContext);
 
-  const uploadFileToMongoDB = async (name, url) => {
+  const uploadFileToMongoDB = async (name, url, type, lastModifiedDate) => {
     const requestBody = {
       query: `
 			mutation {
-				uploadFile(fileInput: {name: "${name}", url: "${url}"}) {
-					_id
+				uploadFile(fileInput: {name: "${name}", url: "${url}", type: "${type}", updatedAt: "${lastModifiedDate}"}) {
 					name
-					url
+					type
+					updatedAt
 				}
 			}`,
     };
@@ -51,7 +51,7 @@ export default function FileUpload() {
     multiple: true,
     action: 'http://localhost:8000/api/s3/upload',
     onChange(info) {
-      const { response, status } = info.file;
+      const { response, status, type, lastModifiedDate } = info.file;
       if (status !== 'uploading') {
         console.log(info.file, info.fileList);
       }
@@ -64,8 +64,7 @@ export default function FileUpload() {
           message.success(`${info.file.name} file uploaded successfully.`);
           const name = response.image;
           const url = response.location;
-
-          uploadFileToMongoDB(name, url);
+          uploadFileToMongoDB(name, url, type, lastModifiedDate);
         }
       } else if (status === 'error') {
         message.error(`${info.file.name} file upload failed.`);
@@ -81,10 +80,7 @@ export default function FileUpload() {
       <p className='ant-upload-text'>
         Click or drag file to this area to upload
       </p>
-      <p className='ant-upload-hint'>
-        Support for a single or bulk upload. Strictly prohibit from uploading
-        company data or other band files
-      </p>
+      <p className='ant-upload-hint'>Support for a single or bulk upload.</p>
     </Upload.Dragger>
   );
 }

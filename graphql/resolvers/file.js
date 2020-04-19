@@ -6,8 +6,7 @@ module.exports = {
   files: async () => {
     try {
       const files = await File.find();
-      // return clients.map((client) => transformClient(client));
-      return files;
+      return files.map((file) => transformFile(file));
     } catch (error) {
       throw err;
     }
@@ -18,6 +17,8 @@ module.exports = {
     const file = new File({
       url: args.fileInput.url,
       name: args.fileInput.name,
+      type: args.fileInput.type,
+      updatedAt: args.fileInput.updatedAt,
     });
 
     try {

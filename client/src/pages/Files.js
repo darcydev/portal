@@ -6,6 +6,21 @@ import Moment from 'react-moment';
 
 import CustomTag from '../components/Tag';
 import SearchBar from '../components/DataEntry/SearchBar';
+import FileUpload from '../components/DataEntry/FileUpload';
+
+const createSelectOptions = (dataArray) => {
+  return dataArray.map((v, i) => (
+    <Select.Option key={`${i}: ${v}`} value={v} label={v}>
+      {v}
+    </Select.Option>
+  ));
+};
+
+const props = {
+  allowClear: true,
+  showArrow: true,
+  mode: 'multiple',
+};
 
 export default function Files() {
   const [files, setFiles] = useState([]);
@@ -70,7 +85,7 @@ export default function Files() {
           _id
 					name
 					url
-					createdAt
+					type
 					updatedAt
         }
       }
@@ -87,7 +102,9 @@ export default function Files() {
 
     res
       .json()
-      .then((resData) => setFiles(resData.data.files))
+      .then((resData) => {
+        setFiles(resData.data.files);
+      })
       .catch((err) => console.error(err));
   }
 
@@ -122,7 +139,6 @@ export default function Files() {
         href: file.url,
         title: file.name,
         description: 'Insert Description',
-        createdAt: file.createdAt,
         updatedAt: file.updatedAt,
         tags: ['Animation', 'Web Design', 'Business Card'],
         jobCodes: ['DPC9299', 'AAA123', 'XYB123'],
@@ -137,31 +153,35 @@ export default function Files() {
     <StyledContainer>
       <h1>files page</h1>
       <section className='files-section'>
+        <FileUpload />
         <div className='search-and-filter'>
           <Select
-            mode='multiple'
+            {...props}
             placeholder='File Name'
             onChange={(e) => setFilters({ fileName: e })}
             onDeselect={(e) => console.log(e)}
             style={{ width: '100%' }}
-            allowClear={true}
-            showArrow={true}
           >
-            {files.map((v, i) => (
-              <Select.Option
-                key={`${i}: ${v.name}`}
-                value={v.name}
-                label={v.name}
-              >
-                {v.name}
-              </Select.Option>
-            ))}
+            {createSelectOptions([...new Set(files.map((v) => v.name))])}
           </Select>
-          <SearchBar
+          <Select
+            {...props}
+            placeholder='File Tag'
+            onChange={(e) => setFilters({ fileTag: e })}
+            onDeselect={(e) => console.log(e)}
+            style={{ width: '100%' }}
+          >
+            {createSelectOptions([...new Set(files.map((v) => v.tag))])}
+          </Select>
+          <Select
+            {...props}
             placeholder='File Type'
-            data={['png', 'jpg', 'mp3', 'mp4', 'pdf']}
-          />
-          {/* <SearchBar placeholder='File Tag' data={files.map((v) => v.tags)} /> */}
+            onChange={(e) => setFilters({ fileType: e })}
+            onDeselect={(e) => console.log(e)}
+            style={{ width: '100%' }}
+          >
+            {createSelectOptions([...new Set(files.map((v) => v.type))])}
+          </Select>
           <SearchBar placeholder='Job' />
           <SearchBar placeholder='Job Tag' />
           <SearchBar
@@ -186,9 +206,7 @@ export default function Files() {
                 title={item.title}
                 description={item.description}
               />
-              created at: <Moment unix>{item.createdAt}</Moment>
-              <br />
-              updated at: <Moment unix>{item.updatedAt}</Moment>
+              updated at: <Moment>{item.updatedAt}</Moment>
               <br />
               {item.tags.map((tag, i) => (
                 <CustomTag key={`${i}: ${tag}`} text={tag} />

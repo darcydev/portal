@@ -41,7 +41,7 @@ type File {
 	_id: ID!
 	url: String!
 	name: String!
-	createdAt: String!
+	type: String!
 	updatedAt: String!
 }
 
@@ -83,6 +83,8 @@ input JobUpdate {
 input FileInput {
 	url: String!
 	name: String!
+	type: String!
+	updatedAt: String!
 }
 
 type RootQuery {

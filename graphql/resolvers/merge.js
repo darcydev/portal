@@ -36,8 +36,6 @@ const transformFile = (file) => {
   return {
     ...file._doc,
     _id: file.id,
-    createdAt: dateToString(file._doc.createdAt),
-    updatedAt: dateToString(file._doc.updatedAt),
   };
 };
 
