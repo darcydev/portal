@@ -22,7 +22,6 @@ module.exports = {
   },
   createClient: async (args, req) => {
     if (!req.isAuth) throw new Error('User is not authenticated');
-
     const existingName = await Client.findOne({ code: args.clientInput.name });
     if (existingName) throw new Error('Client name already exists');
 

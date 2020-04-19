@@ -4,11 +4,8 @@ import { Form, Input, Button } from 'antd';
 import AuthContext from '../context/auth-context';
 
 export default function Auth() {
-  const context = useContext(AuthContext);
-
-  console.log(context);
-
   const [isLogin, handleLogin] = useState(false);
+  const context = useContext(AuthContext);
 
   const onFinish = (values) => {
     const { email, password } = values;

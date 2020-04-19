@@ -39,12 +39,8 @@ type Job {
 
 type File {
 	_id: ID!
-	job: Job!
 	url: String!
 	name: String!
-	description: String
-	type: String!
-	tags: [String!]!
 	createdAt: String!
 	updatedAt: String!
 }
@@ -84,13 +80,19 @@ input JobUpdate {
   files: String
 }
 
+input FileInput {
+	url: String!
+	name: String!
+}
+
 type RootQuery {
-    login(email: String!, password: String!): AuthData!
-    clients: [Client!]!
-		clientById(id: String!): Client!
-    jobs: [Job!]!
-		jobById(id: String!): Job!
-		jobsByClientId(clientId: String!): [Job!]!
+  login(email: String!, password: String!): AuthData!
+  clients: [Client!]!
+	clientById(id: String!): Client!
+  jobs: [Job!]!
+	jobById(id: String!): Job!
+	jobsByClientId(clientId: String!): [Job!]!
+	files: [File!]!
 }
 
 type RootMutation {
@@ -98,7 +100,8 @@ type RootMutation {
   createClient(clientInput: ClientInput): Client
   updateClient(clientUpdate: ClientUpdate): Client
   createJob(jobInput: JobInput): Job
-  updateJob(jobUpdate: JobUpdate): Job
+	updateJob(jobUpdate: JobUpdate): Job
+	uploadFile(fileInput: FileInput): File
 }
 
 schema {
