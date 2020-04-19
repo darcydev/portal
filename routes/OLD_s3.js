@@ -1,24 +1,56 @@
 const express = require('express');
-const aws = require('aws-sdk');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
+const AWS = require('aws-sdk');
 const path = require('path');
-const url = require('url');
 
-// express.Router() creates a modular, mountable route handlers
-const router = express.Router();
+const s3Router = express.Router();
 
-const s3 = new aws.S3({
-  accessKeyId: process.env.AWS_IAM_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_IAM_SECRET_KEY,
-  Bucket: process.env.AWS_S3_BUCKET_NAME,
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
 });
 
-/* SINGLE UPLOAD */
+const upload = multer({ storage: storage }).array('file');
+
+s3Router.get('/', function (req, res) {
+  return res.send('Hello s3 route');
+});
+
+s3Router.post('/upload', function (req, res) {
+  upload(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      return res.status(500).json(err);
+      // A Multer error occurred when uploading.
+    } else if (err) {
+      return res.status(500).json(err);
+      // An unknown error occurred when uploading.
+    }
+
+    return res.status(200).send(req.file);
+    // Everything went fine.
+  });
+});
+
+module.exports = s3Router;
+
+/* const s3Router = express.Router();
+
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_KEY,
+  region: 'ap-southeast-2',
+});
+
+// SINGLE UPLOAD
 const profileImgUpload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: process.env.AWS_S3_BUCKET_NAME,
+    bucket: 'portal-impress',
     acl: 'public-read',
     key: function (req, file, cb) {
       cb(
@@ -32,7 +64,6 @@ const profileImgUpload = multer({
   }),
   limits: { fileSize: 2000000 }, // In bytes: 2000000 bytes = 2 MB
   fileFilter: function (req, file, cb) {
-    // TODO: do we want to limit file type?
     checkFileType(file, cb);
   },
 }).single('profileImage');
@@ -51,9 +82,9 @@ function checkFileType(file, cb) {
   }
 }
 
-router.post('/upload', (req, res) => {
+s3Router.post('/upload', (req, res) => {
   profileImgUpload(req, res, (error) => {
-    console.log('req :', req.file);
+    console.log('req :', req);
     console.log('error', error);
     if (error) {
       console.log('errors', error);
@@ -77,4 +108,4 @@ router.post('/upload', (req, res) => {
   });
 });
 
-module.exports = router;
+ */

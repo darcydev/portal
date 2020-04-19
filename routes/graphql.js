@@ -1,6 +1,7 @@
 const express = require('express');
-const graphqlRouter = express.Router();
 const graphqlHttp = require('express-graphql');
+
+const graphqlRouter = express.Router();
 
 const graphQlSchema = require('../graphql/schema/index');
 const graphQlResolvers = require('../graphql/resolvers/index');
