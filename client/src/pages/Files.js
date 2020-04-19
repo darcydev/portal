@@ -1,52 +1,172 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { List, Table, Button, Input } from 'antd';
+import { List, Select } from 'antd';
+import Moment from 'react-moment';
+
+import CustomTag from '../components/Tag';
+import SearchBar from '../components/DataEntry/SearchBar';
 
 export default function Files() {
-  const data = [];
-  for (let i = 1; i < 100; i++) {
-    data.push({
-      href: 'http://ant.design',
-      title: `File ${i}`,
-      description: 'This is a template file description section',
+  const [files, setFiles] = useState([]);
+  const [clients, setClients] = useState([]);
+  const [filteredFiles, setFilteredFiles] = useState([]);
+  const [filters, setFilters] = useState({
+    fileName: null,
+    fileType: null,
+    fileTag: null,
+    jobCode: null,
+    jobTag: null,
+    clientName: null,
+  });
+
+  useEffect(() => {
+    fetchFiles();
+    fetchClientCodes();
+  }, []);
+
+  const clearFilters = () => {
+    setFilters({
+      fileName: null,
+      fileType: null,
+      fileTag: null,
+      jobCode: null,
+      jobTag: null,
+      clientName: null,
     });
+  };
+
+  async function fetchClientCodes() {
+    const requestBody = {
+      query: `
+      query { 
+        clients {
+          code
+          name
+        }
+      }
+    `,
+    };
+
+    const res = await fetch('http://localhost:8000/api/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    res
+      .json()
+      .then((resData) => setClients(resData.data.clients))
+      .catch((err) => console.error(err));
   }
 
-  // TODO fetch files
+  async function fetchFiles() {
+    let requestBody = {
+      query: `
+      query { 
+        files {
+          _id
+					name
+					url
+					createdAt
+					updatedAt
+        }
+      }
+    `,
+    };
 
-  // TODO fetch job codes
+    const res = await fetch('http://localhost:8000/api/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-  // TODO fetch clients
+    res
+      .json()
+      .then((resData) => setFiles(resData.data.files))
+      .catch((err) => console.error(err));
+  }
+
+  const data = [];
+  const getFilteredFiles = () => {
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+
+      /* FILTER HANDLING */
+      if (filters.fileName && !filters.fileName.includes(file.name)) {
+        continue;
+      }
+      if (filters.fileType && !filters.fileType.includes(file.type)) {
+        continue;
+      }
+      if (filters.fileTag && !filters.fileTag.includes(file.tag)) {
+        continue;
+      }
+      if (filters.jobCode && !filters.jobCode.includes(file.jobCode)) {
+        continue;
+      }
+      if (filters.jobTag && !filters.jobCode.includes(file.jobTag)) {
+        continue;
+      }
+      if (filters.clientCode && !filters.jobCode.includes(file.clientCode)) {
+        continue;
+      }
+
+      // if the file has passed all filters, push it on the data array to be displayed
+      data.push({
+        _id: file._id,
+        href: file.url,
+        title: file.name,
+        description: 'Insert Description',
+        createdAt: file.createdAt,
+        updatedAt: file.updatedAt,
+        tags: ['Animation', 'Web Design', 'Business Card'],
+        jobCodes: ['DPC9299', 'AAA123', 'XYB123'],
+      });
+    }
+
+    return data;
+  };
+  getFilteredFiles();
 
   return (
     <StyledContainer>
       <h1>files page</h1>
       <section className='files-section'>
         <div className='search-and-filter'>
-          <Input.Search
-            placeholder='Filter by Job code'
-            enterButton='Search'
-            size='large'
-            onSearch={(value) => console.log(value)}
+          <Select
+            mode='multiple'
+            placeholder='File Name'
+            onChange={(e) => setFilters({ fileName: e })}
+            onDeselect={(e) => console.log(e)}
+            style={{ width: '100%' }}
+            allowClear={true}
+            showArrow={true}
+          >
+            {files.map((v, i) => (
+              <Select.Option
+                key={`${i}: ${v.name}`}
+                value={v.name}
+                label={v.name}
+              >
+                {v.name}
+              </Select.Option>
+            ))}
+          </Select>
+          <SearchBar
+            placeholder='File Type'
+            data={['png', 'jpg', 'mp3', 'mp4', 'pdf']}
           />
-          <Input.Search
-            placeholder='Filter by File Tag'
-            enterButton='Search'
-            size='large'
-            onSearch={(value) => console.log(value)}
-          />
-          <Input.Search
-            placeholder='Filter by Job tag'
-            enterButton='Search'
-            size='large'
-            onSearch={(value) => console.log(value)}
-          />
-          <Input.Search
-            placeholder='Search by File name'
-            enterButton='Search'
-            size='large'
-            onSearch={(value) => console.log(value)}
+          {/* <SearchBar placeholder='File Tag' data={files.map((v) => v.tags)} /> */}
+          <SearchBar placeholder='Job' />
+          <SearchBar placeholder='Job Tag' />
+          <SearchBar
+            placeholder='Client'
+            data={clients.map((v) => `${v.name} (${v.code})`)}
           />
         </div>
         <List
@@ -54,29 +174,28 @@ export default function Files() {
           size='large'
           dataSource={data}
           renderItem={(item) => (
-            <Link to={`/file/TODO`}>
-              <List.Item
-                key={item.title}
-                extra={
-                  <img
-                    width={272}
-                    alt='logo'
-                    src='https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png'
-                  />
-                }
-              >
-                <List.Item.Meta
-                  title={item.title}
-                  description={item.description}
-                />
-                include tags include job info include timestamps
-              </List.Item>
-            </Link>
+            <List.Item
+              key={item.href}
+              extra={
+                <Link to={`/file/${item._id}`}>
+                  <img width={272} alt={item.title} src={`${item.href}`} />
+                </Link>
+              }
+            >
+              <List.Item.Meta
+                title={item.title}
+                description={item.description}
+              />
+              created at: <Moment unix>{item.createdAt}</Moment>
+              <br />
+              updated at: <Moment unix>{item.updatedAt}</Moment>
+              <br />
+              {item.tags.map((tag, i) => (
+                <CustomTag key={`${i}: ${tag}`} text={tag} />
+              ))}
+            </List.Item>
           )}
           pagination={{
-            onChange: (page) => {
-              console.log(page);
-            },
             pageSize: 20,
           }}
         ></List>

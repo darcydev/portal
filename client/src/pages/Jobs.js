@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Table, Tag, Input, Button } from 'antd';
+import { Card, Table, Input, Button } from 'antd';
 import { Link } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
+
 import CustomTag from '../components/Tag';
 
 export default function Jobs() {

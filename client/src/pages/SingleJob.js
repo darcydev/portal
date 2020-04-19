@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Card, PageHeader, Table, Tag, Tabs, Button, Descriptions } from 'antd';
+import { Card, PageHeader, Table, Tabs, Button, Descriptions } from 'antd';
 import Moment from 'react-moment';
 import styled from 'styled-components';
 
 export default function SingleJob() {
   const [job, setJob] = useState(null);
-
   const { id } = useParams();
 
   useEffect(() => {
