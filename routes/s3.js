@@ -33,8 +33,7 @@ const singleUpload = multer({
 
 router.post('/upload', (req, res) => {
   singleUpload(req, res, (error) => {
-    console.log('req :', req.file);
-    console.log('error', error);
+    console.log('req :', req);
     if (error) {
       console.log('errors', error);
       res.json({ error: error });
