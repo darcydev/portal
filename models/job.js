@@ -6,35 +6,31 @@ const jobSchema = new Schema(
   {
     client: {
       type: Schema.Types.ObjectId,
-      ref: 'Client'
+      ref: 'Client',
     },
     code: {
       type: String,
-      required: true
+      required: true,
     },
     title: {
       type: String,
-      required: true
+      required: true,
     },
     description: {
       type: String,
-      required: true
+      required: true,
     },
     tags: {
       type: Array,
-      required: true
+      required: true,
     },
     colors: {
       type: String,
-      required: false
+      required: false,
     },
-    files: {
-      type: Array,
-      required: false
-    }
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 

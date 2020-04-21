@@ -27,14 +27,13 @@ export default function FileUpload() {
   };
 
   const uploadFileToMongoDB = async (values) => {
-    console.log('values :', values);
+    const { jobId, tags } = values;
     const { name, url, type, updatedAt } = file;
 
-    // TODO include values from form into backend
     const requestBody = {
       query: `
 			mutation {
-				uploadFile(fileInput: {name: "${name}", url: "${url}", type: "${type}", updatedAt: "${updatedAt}"}) {
+				uploadFile(fileInput: {name: "${name}", url: "${url}", type: "${type}", updatedAt: "${updatedAt}", job: "${jobId}", tags: "${tags}"}) {
 					name
 					type
 					updatedAt
@@ -97,11 +96,6 @@ export default function FileUpload() {
 						_id
 						code
 						title
-						client {
-							_id
-							name
-							code
-						}
 					}
 				}
 			`,
@@ -121,12 +115,10 @@ export default function FileUpload() {
       .catch((err) => console.error(err));
   }
 
-  console.log('jobs :', jobs);
-
   return (
     <StyledForm onFinish={onFinish}>
       <Form.Item
-        name='job-code'
+        name='jobId'
         label='File Job Code'
         rules={[{ required: true, message: 'Select job code' }]}
       >
@@ -140,7 +132,7 @@ export default function FileUpload() {
         </Select>
       </Form.Item>
       <Form.Item
-        name='file-tags'
+        name='tags'
         label='File Tag(s)'
         rules={[{ required: true, message: 'Select file tags' }]}
       >
@@ -149,7 +141,11 @@ export default function FileUpload() {
           <Option value='usa'>U.S.A</Option>
         </Select>
       </Form.Item>
-      <Form.Item name='file-upload' label='File Upload'>
+      <Form.Item
+        name='file-upload'
+        label='File Upload'
+        rules={[{ required: true, message: 'File required' }]}
+      >
         <Upload.Dragger {...props}>
           <p className='ant-upload-drag-icon'>
             <InboxOutlined />

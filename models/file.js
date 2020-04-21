@@ -19,6 +19,8 @@ const fileSchema = new Schema({
     type: String,
     required: true,
   },
+  job: { type: Schema.Types.ObjectId, ref: 'Job' },
+  tags: { type: Array, required: true },
 });
 
 module.exports = mongoose.model('File', fileSchema);

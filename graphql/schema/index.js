@@ -32,7 +32,6 @@ type Job {
   description: String!
   tags: [String!]!
   colors: String
-  files: [String]
   createdAt: String!
   updatedAt: String!
 }
@@ -43,6 +42,8 @@ type File {
 	name: String!
 	type: String!
 	updatedAt: String!
+	job: Job!
+	tags: [String!]!
 }
 
 input UserInput {
@@ -68,7 +69,6 @@ input JobInput {
   description: String!
   tags: [String!]!
   colors: String
-  files: String
 }
 
 input JobUpdate {
@@ -77,13 +77,14 @@ input JobUpdate {
   description: String
   tags: [String]
   colors: String
-  files: String
 }
 
 input FileInput {
 	url: String!
 	name: String!
 	type: String!
+	job: ID!
+	tags: [String!]!
 	updatedAt: String!
 }
 

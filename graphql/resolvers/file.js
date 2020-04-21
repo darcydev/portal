@@ -19,6 +19,8 @@ module.exports = {
       name: args.fileInput.name,
       type: args.fileInput.type,
       updatedAt: args.fileInput.updatedAt,
+      job: args.fileInput.jobId,
+      tags: args.fileInput.tags,
     });
 
     try {

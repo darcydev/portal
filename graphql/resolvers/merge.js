@@ -13,6 +13,18 @@ const client = async (clientId) => {
   }
 };
 
+const job = async (jobId) => {
+  try {
+    const job = await job.findById(jobId);
+    return {
+      ...job._doc,
+      _id: job.id,
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
 const transformClient = (client) => {
   return {
     ...client._doc,
@@ -36,6 +48,7 @@ const transformFile = (file) => {
   return {
     ...file._doc,
     _id: file.id,
+    job: job.bind(this, file._doc.job),
   };
 };
 

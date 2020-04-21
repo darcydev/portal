@@ -25,12 +25,13 @@ const props = {
 export default function Files() {
   const [files, setFiles] = useState([]);
   const [clients, setClients] = useState([]);
+  const [jobs, setJobs] = useState([]);
   const [filteredFiles, setFilteredFiles] = useState([]);
   const [filters, setFilters] = useState({
     fileName: null,
     fileType: null,
     fileTag: null,
-    jobCode: null,
+    jobName: null,
     jobTag: null,
     clientName: null,
   });
@@ -38,6 +39,7 @@ export default function Files() {
   useEffect(() => {
     fetchFiles();
     fetchClientCodes();
+    fetchJobCodes();
   }, []);
 
   const clearFilters = () => {
@@ -77,6 +79,32 @@ export default function Files() {
       .catch((err) => console.error(err));
   }
 
+  async function fetchJobCodes() {
+    let requestBody = {
+      query: `
+				query { 
+					jobs {
+						code
+						title
+					}
+				}
+			`,
+    };
+
+    const res = await fetch('http://localhost:8000/api/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    res
+      .json()
+      .then((resData) => setJobs(resData.data.jobs))
+      .catch((err) => console.error(err));
+  }
+
   async function fetchFiles() {
     let requestBody = {
       query: `
@@ -87,6 +115,7 @@ export default function Files() {
 					url
 					type
 					updatedAt
+					tags
         }
       }
     `,
@@ -112,26 +141,22 @@ export default function Files() {
   const getFilteredFiles = () => {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
+      const {
+        fileName,
+        fileType,
+        fileTag,
+        jobName,
+        jobTag,
+        clientName,
+      } = filters;
 
       /* FILTER HANDLING */
-      if (filters.fileName && !filters.fileName.includes(file.name)) {
-        continue;
-      }
-      if (filters.fileType && !filters.fileType.includes(file.type)) {
-        continue;
-      }
-      if (filters.fileTag && !filters.fileTag.includes(file.tag)) {
-        continue;
-      }
-      if (filters.jobCode && !filters.jobCode.includes(file.jobCode)) {
-        continue;
-      }
-      if (filters.jobTag && !filters.jobCode.includes(file.jobTag)) {
-        continue;
-      }
-      if (filters.clientCode && !filters.jobCode.includes(file.clientCode)) {
-        continue;
-      }
+      if (fileName && !fileName.includes(file.name)) continue;
+      if (fileType && !fileType.includes(file.type)) continue;
+      if (fileTag && !fileTag.includes(file.tag)) continue;
+      if (jobName && !jobName.includes(file.jobName)) continue;
+      if (jobTag && !jobTag.includes(file.jobTag)) continue;
+      if (clientName && !clientName.includes(file.clientCode)) continue;
 
       // if the file has passed all filters, push it on the data array to be displayed
       data.push({
@@ -159,7 +184,7 @@ export default function Files() {
             {...props}
             placeholder='File Name'
             onChange={(e) => setFilters({ fileName: e })}
-            onDeselect={(e) => console.log(e)}
+            onDeselect={clearFilters}
             style={{ width: '100%' }}
           >
             {createSelectOptions([...new Set(files.map((v) => v.name))])}
@@ -168,7 +193,7 @@ export default function Files() {
             {...props}
             placeholder='File Tag'
             onChange={(e) => setFilters({ fileTag: e })}
-            onDeselect={(e) => console.log(e)}
+            onDeselect={clearFilters}
             style={{ width: '100%' }}
           >
             {createSelectOptions([...new Set(files.map((v) => v.tag))])}
@@ -177,12 +202,22 @@ export default function Files() {
             {...props}
             placeholder='File Type'
             onChange={(e) => setFilters({ fileType: e })}
-            onDeselect={(e) => console.log(e)}
+            onDeselect={clearFilters}
             style={{ width: '100%' }}
           >
             {createSelectOptions([...new Set(files.map((v) => v.type))])}
           </Select>
-          <SearchBar placeholder='Job' />
+          <Select
+            {...props}
+            placeholder='Job'
+            onChange={(e) => setFilters({ jobName: e })}
+            onDeselect={clearFilters}
+            style={{ width: '100%' }}
+          >
+            {createSelectOptions([
+              ...new Set(jobs.map((v) => `${v.title} (${v.code})`)),
+            ])}
+          </Select>
           <SearchBar placeholder='Job Tag' />
           <SearchBar
             placeholder='Client'
