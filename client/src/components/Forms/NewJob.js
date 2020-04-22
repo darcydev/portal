@@ -16,12 +16,9 @@ export default function NewJob() {
   }, []);
 
   const onFinish = (values) => {
-    console.log('form finished', values);
-
     createJob(values);
   };
 
-  // fetch all clients (for select dropdown box)
   async function fetchClients() {
     let requestBody = {
       query: `

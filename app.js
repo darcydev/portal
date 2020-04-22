@@ -6,10 +6,6 @@ const cors = require('cors');
 
 const isAuth = require('./middleware/is-auth');
 
-// TODO set up db as route
-// TODO figure out why app.use() is working for /graphql but app.post/get is not!
-// TODO figure out why /s3/upload is not working
-
 const app = express();
 const port = process.env.PORT || 8000;
 // TODO do we need to move this in seperate file?

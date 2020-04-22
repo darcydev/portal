@@ -29,27 +29,20 @@ const singleUpload = multer({
     },
   }),
   limits: { fileSize: 2000000 }, // In bytes: 2000000 bytes = 2 MB
-}).single('file-upload');
+}).single('files');
 
 router.post('/upload', (req, res) => {
   singleUpload(req, res, (error) => {
-    console.log('req :', req);
-    if (error) {
-      console.log('errors', error);
-      res.json({ error: error });
-    } else {
-      // If File not found
-      if (req.file === undefined) {
-        console.log('Error: No File Selected!');
-        res.json('Error: No File Selected');
-      } else {
+    console.log('req :>> ', req);
+    if (error) res.json({ error: error });
+    else {
+      if (req.file === undefined) res.json('Error: No File Selected');
+      else {
         // If Success
-        const imageName = req.file.key;
-        const imageLocation = req.file.location;
         // Save the file name into database into profile model
         res.json({
-          image: imageName,
-          location: imageLocation,
+          image: req.file.key,
+          location: req.file.location,
         });
       }
     }
