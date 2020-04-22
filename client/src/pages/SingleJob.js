@@ -28,7 +28,6 @@ export default function SingleJob() {
           description
           tags
           colors
-          files
           createdAt
           updatedAt
 				}

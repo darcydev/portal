@@ -30,9 +30,7 @@ module.exports = {
     }
   },
   createJob: async (args, req) => {
-    // check user is auth
     if (!req.isAuth) throw new Error('User is not authenticated');
-    // ensure code is unique
     const existingCode = await Job.findOne({ code: args.jobInput.code });
     if (existingCode) throw new Error('Job code already exists');
 
@@ -68,8 +66,7 @@ module.exports = {
 
     try {
       const result = await job.save();
-      updatedJob = transformJob(result);
-      return updatedJob;
+      return transformJob(result);
     } catch (error) {
       throw error;
     }

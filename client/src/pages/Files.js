@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { List } from 'antd';
+import { List, Button } from 'antd';
 import Moment from 'react-moment';
 
 import CustomTag from '../components/Tag';
@@ -107,6 +107,8 @@ export default function Files() {
 						title
 						tags
 					}
+					delivered
+					description
         }
       }
     `,
@@ -161,10 +163,15 @@ export default function Files() {
         _id: file._id,
         href: file.url,
         title: file.name,
-        description: 'Insert Description',
+        description: file.description,
+        delivered: file.delivered,
         updatedAt: file.updatedAt,
         tags: file.tags,
-        jobCodes: ['DPC9299', 'AAA123', 'XYB123'],
+        job: {
+          id: file.job._id,
+          title: file.job.title,
+          tags: file.job.tags,
+        },
       });
     }
 
@@ -250,6 +257,9 @@ export default function Files() {
               {item.tags.map((tag, i) => (
                 <CustomTag key={`${i}: ${tag}`} text={tag} />
               ))}
+              <Link to={`/job/${item.job.id}`}>
+                <Button type='primary'>View Job</Button>
+              </Link>
             </List.Item>
           )}
           pagination={{

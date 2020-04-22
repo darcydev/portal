@@ -44,6 +44,8 @@ type File {
 	updatedAt: String!
 	job: Job!
 	tags: [String!]!
+	delivered: Boolean!
+	description: String!
 }
 
 input UserInput {
@@ -86,6 +88,8 @@ input FileInput {
 	job: ID!
 	tags: [String!]!
 	updatedAt: String!
+	delivered: Boolean!
+	description: String!
 }
 
 type RootQuery {
