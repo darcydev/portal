@@ -1,32 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { List, Select } from 'antd';
+import { List } from 'antd';
 import Moment from 'react-moment';
 
 import CustomTag from '../components/Tag';
 import SearchBar from '../components/DataEntry/SearchBar';
 import FileUpload from '../components/DataEntry/FileUpload';
-
-const createSelectOptions = (dataArray) => {
-  return dataArray.map((v, i) => (
-    <Select.Option key={`${i}: ${v}`} value={v} label={v}>
-      {v}
-    </Select.Option>
-  ));
-};
-
-const props = {
-  allowClear: true,
-  showArrow: true,
-  mode: 'multiple',
-};
+import { fileTags, jobTags } from '../context/tags';
 
 export default function Files() {
   const [files, setFiles] = useState([]);
   const [clients, setClients] = useState([]);
   const [jobs, setJobs] = useState([]);
-  const [filteredFiles, setFilteredFiles] = useState([]);
   const [filters, setFilters] = useState({
     fileName: null,
     fileType: null,
@@ -116,6 +102,11 @@ export default function Files() {
 					type
 					updatedAt
 					tags
+					job {
+						_id
+						title
+						tags
+					}
         }
       }
     `,
@@ -137,6 +128,13 @@ export default function Files() {
       .catch((err) => console.error(err));
   }
 
+  const props = {
+    allowClear: true,
+    showArrow: true,
+    mode: 'multiple',
+    onDeselect: clearFilters,
+  };
+
   const data = [];
   const getFilteredFiles = () => {
     for (let i = 0; i < files.length; i++) {
@@ -153,9 +151,9 @@ export default function Files() {
       /* FILTER HANDLING */
       if (fileName && !fileName.includes(file.name)) continue;
       if (fileType && !fileType.includes(file.type)) continue;
-      if (fileTag && !fileTag.includes(file.tag)) continue;
+      if (fileTag && !fileTag.some((tag) => file.tags.includes(tag))) continue;
       if (jobName && !jobName.includes(file.jobName)) continue;
-      if (jobTag && !jobTag.includes(file.jobTag)) continue;
+      // if (jobTag && !jobTag.some((tag) => file.jobTag)) continue;
       if (clientName && !clientName.includes(file.clientCode)) continue;
 
       // if the file has passed all filters, push it on the data array to be displayed
@@ -165,7 +163,7 @@ export default function Files() {
         title: file.name,
         description: 'Insert Description',
         updatedAt: file.updatedAt,
-        tags: ['Animation', 'Web Design', 'Business Card'],
+        tags: file.tags,
         jobCodes: ['DPC9299', 'AAA123', 'XYB123'],
       });
     }
@@ -174,54 +172,60 @@ export default function Files() {
   };
   getFilteredFiles();
 
+  console.log('files', files);
+  console.log('filters', filters);
+
   return (
     <StyledContainer>
       <h1>files page</h1>
       <section className='files-section'>
         <FileUpload />
         <div className='search-and-filter'>
-          <Select
-            {...props}
-            placeholder='File Name'
-            onChange={(e) => setFilters({ fileName: e })}
-            onDeselect={clearFilters}
-            style={{ width: '100%' }}
-          >
-            {createSelectOptions([...new Set(files.map((v) => v.name))])}
-          </Select>
-          <Select
-            {...props}
-            placeholder='File Tag'
-            onChange={(e) => setFilters({ fileTag: e })}
-            onDeselect={clearFilters}
-            style={{ width: '100%' }}
-          >
-            {createSelectOptions([...new Set(files.map((v) => v.tag))])}
-          </Select>
-          <Select
-            {...props}
-            placeholder='File Type'
-            onChange={(e) => setFilters({ fileType: e })}
-            onDeselect={clearFilters}
-            style={{ width: '100%' }}
-          >
-            {createSelectOptions([...new Set(files.map((v) => v.type))])}
-          </Select>
-          <Select
-            {...props}
-            placeholder='Job'
-            onChange={(e) => setFilters({ jobName: e })}
-            onDeselect={clearFilters}
-            style={{ width: '100%' }}
-          >
-            {createSelectOptions([
-              ...new Set(jobs.map((v) => `${v.title} (${v.code})`)),
-            ])}
-          </Select>
-          <SearchBar placeholder='Job Tag' />
           <SearchBar
-            placeholder='Client'
-            data={clients.map((v) => `${v.name} (${v.code})`)}
+            props={{
+              ...props,
+              placeholder: 'File name',
+            }}
+            optionsData={[...new Set(files.map((v) => v.name))]}
+            passData={(e) => setFilters({ fileName: e })}
+          />
+          <SearchBar
+            props={{
+              ...props,
+              placeholder: 'File tag',
+            }}
+            optionsData={fileTags}
+            passData={(e) => setFilters({ fileTag: e })}
+          />
+          <SearchBar
+            props={{
+              ...props,
+              placeholder: 'File type',
+            }}
+            optionsData={[...new Set(files.map((v) => v.type))]}
+            passData={(e) => setFilters({ fileType: e })}
+          />
+          <SearchBar
+            props={{
+              ...props,
+              placeholder: 'Job name',
+            }}
+            optionsData={[
+              ...new Set(jobs.map((v) => `${v.title} (${v.code})`)),
+            ]}
+            passData={(e) => setFilters({ jobName: e })}
+          />
+          <SearchBar
+            props={{ ...props, placeholder: 'Job tag' }}
+            optionsData={jobTags}
+            passData={(e) => setFilters({ jobTag: e })}
+          />
+          <SearchBar
+            props={{ ...props, placeholder: 'Client name' }}
+            optionsData={[
+              ...new Set(clients.map((v) => `${v.name} (${v.code})`)),
+            ]}
+            passData={(e) => setFilters({ clientName: e })}
           />
         </div>
         <List

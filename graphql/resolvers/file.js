@@ -12,14 +12,15 @@ module.exports = {
     }
   },
   uploadFile: async (args, req) => {
-    if (!req.isAuth) throw new Error('User is not authenticated');
+    // TODO uncomment
+    // if (!req.isAuth) throw new Error('User is not authenticated');
 
     const file = new File({
       url: args.fileInput.url,
       name: args.fileInput.name,
       type: args.fileInput.type,
       updatedAt: args.fileInput.updatedAt,
-      job: args.fileInput.jobId,
+      job: args.fileInput.job,
       tags: args.fileInput.tags,
     });
 

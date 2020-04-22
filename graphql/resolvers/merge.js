@@ -1,4 +1,5 @@
 const Client = require('../../models/client');
+const Job = require('../../models/job');
 const { dateToString } = require('../../helpers/date');
 
 const client = async (clientId) => {
@@ -15,7 +16,7 @@ const client = async (clientId) => {
 
 const job = async (jobId) => {
   try {
-    const job = await job.findById(jobId);
+    const job = await Job.findById(jobId);
     return {
       ...job._doc,
       _id: job.id,

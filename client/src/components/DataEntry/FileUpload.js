@@ -4,8 +4,15 @@ import { Button, Form, message, Select, Upload } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 
 import AuthContext from '../../context/auth-context';
+import { fileTags } from '../../context/tags';
 
-const { Option } = Select;
+const createSelectOptions = (dataArray) => {
+  return dataArray.map((v, i) => (
+    <Select.Option key={`${i}: ${v}`} value={v} label={v}>
+      {v}
+    </Select.Option>
+  ));
+};
 
 export default function FileUpload() {
   const [uploadToS3Failed, setUploadToS3Failed] = useState(false);
@@ -29,6 +36,8 @@ export default function FileUpload() {
   const uploadFileToMongoDB = async (values) => {
     const { jobId, tags } = values;
     const { name, url, type, updatedAt } = file;
+
+    console.log('values', values);
 
     const requestBody = {
       query: `
@@ -54,14 +63,8 @@ export default function FileUpload() {
       .json()
       .then((resData) => {
         resData.data.uploadFile
-          ? message.success(
-              `${resData.data.uploadFile.name} successfully updated to MongoDB`,
-              6
-            )
-          : message.error(
-              `Sorry, an error occurred uploading to MongoDB: ${resData.errors[0].message}`,
-              6
-            );
+          ? message.success('successfully updated to MongoDB', 6)
+          : message.error(`MongoDB error: ${resData.errors[0].message}`, 6);
       })
       .catch((err) => console.error(err));
   };
@@ -124,9 +127,9 @@ export default function FileUpload() {
       >
         <Select>
           {jobs &&
-            jobs.map((job) => (
-              <Select.Option key={job._id} value={job._id}>
-                {job.title} ({job.code})
+            jobs.map((job, i) => (
+              <Select.Option key={job._id} value={job._id} label={job._id}>
+                {`${job.title} (${job.code})`}
               </Select.Option>
             ))}
         </Select>
@@ -136,10 +139,7 @@ export default function FileUpload() {
         label='File Tag(s)'
         rules={[{ required: true, message: 'Select file tags' }]}
       >
-        <Select mode='multiple'>
-          <Option value='china'>China</Option>
-          <Option value='usa'>U.S.A</Option>
-        </Select>
+        <Select mode='multiple'>{createSelectOptions(fileTags)}</Select>
       </Form.Item>
       <Form.Item
         name='file-upload'
