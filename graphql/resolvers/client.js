@@ -32,8 +32,7 @@ module.exports = {
 
     try {
       const result = await client.save();
-      createdClient = transformClient(result);
-      return createdClient;
+      return transformClient(result);
     } catch (error) {
       throw error;
     }
@@ -41,9 +40,6 @@ module.exports = {
   updateClient: async (args, req) => {
     if (!req.isAuth) throw new Error('User is not authenticated');
     const { code, name } = args.clientUpdate;
-
-    console.log('name :', args);
-
     const client = await Client.findOne({ name: name });
     if (!client) throw new Error('Client name not found');
 

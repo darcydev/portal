@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Card, PageHeader, Table, Tabs, Button, Descriptions } from 'antd';
+import { Card, PageHeader, Tabs, Button, Descriptions } from 'antd';
 import Moment from 'react-moment';
 import styled from 'styled-components';
 
 export default function SingleJob() {
   const [job, setJob] = useState(null);
+  const [files, setFiles] = useState([]);
   const { id } = useParams();
 
   useEffect(() => {
@@ -13,7 +14,7 @@ export default function SingleJob() {
   }, []);
 
   async function fetchJobById() {
-    let requestBody = {
+    const requestBody = {
       query: `
 			query {
 				jobById(id: "${id}") {
@@ -53,6 +54,9 @@ export default function SingleJob() {
       })
       .catch((err) => console.error(err));
   }
+
+  // fetch all files associated with this job
+  // TODO
 
   return (
     <div>

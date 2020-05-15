@@ -11,6 +11,15 @@ module.exports = {
       throw err;
     }
   },
+  filesByJobId: async (args, req) => {
+    try {
+      const files = await File.find({ job: { _id: args.jobId } });
+      if (!files) throw new Error('No files found for this job Id');
+      return files.map((file) => transformFile(file));
+    } catch (error) {
+      throw error;
+    }
+  },
   uploadFile: async (args, req) => {
     if (!req.isAuth) throw new Error('User is not authenticated');
 

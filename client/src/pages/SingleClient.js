@@ -41,14 +41,13 @@ export default function SingleClient() {
       .json()
       .then((resData) => {
         handleClient(resData.data.clientById);
-        fetchJobsByClientId(resData.data.clientByCode._id);
+        fetchJobsByClientId(resData.data.clientById._id);
       })
       .catch((err) => console.error(err));
   }
 
-  // TODO
   async function fetchJobsByClientId(clientId) {
-    let requestBody = {
+    const requestBody = {
       query: `
       query {
         jobsByClientId(clientId: "${clientId}") {
@@ -57,7 +56,6 @@ export default function SingleClient() {
           title
           description
           tags
-          files
         }
       }`,
     };
@@ -72,7 +70,9 @@ export default function SingleClient() {
 
     res
       .json()
-      .then((resData) => handleJobs(resData.data.jobsByClientId))
+      .then((resData) => {
+        handleJobs(resData.data.jobsByClientId);
+      })
       .catch((err) => console.error(err));
   }
 

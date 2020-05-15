@@ -100,6 +100,7 @@ type RootQuery {
 	jobById(id: String!): Job!
 	jobsByClientId(clientId: String!): [Job!]!
 	files: [File!]!
+	filesByJobId(jobId: String!): [File!]!
 }
 
 type RootMutation {
