@@ -11,6 +11,7 @@ import JobsPage from './pages/Jobs';
 import SingleJobPage from './pages/SingleJob';
 import FilesPage from './pages/Files';
 import SingleFilePage from './pages/SingleFile';
+import NewJobPage from './pages/NewJob';
 
 import MainNavigation from './components/Navigation/MainNavigation';
 
@@ -63,6 +64,7 @@ export default function App() {
               {token && <Route path='/job/:id' component={SingleJobPage} />}
               {token && <Route path='/files' component={FilesPage} />}
               {token && <Route path='/file/:id' component={SingleFilePage} />}
+              {token && <Route path='/new-job' component={NewJobPage} />}
             </Switch>
           </Layout.Content>
           <Footer />

@@ -42,7 +42,7 @@ export default function NewJob({ data }) {
       <div>
         <PDFDownloadLink document={renderPDF()} fileName='somename.pdf'>
           {({ blob, url, loading, error }) =>
-            loading ? 'Loading document...' : 'Download now!'
+            loading ? 'Loading document...' : 'Download PDF!'
           }
         </PDFDownloadLink>
       </div>

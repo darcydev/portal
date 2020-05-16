@@ -12,6 +12,21 @@ import FileUpload from '../DataEntry/FileUpload';
 
 const { Option } = Select;
 
+const resizeBoxes = {
+  styles: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    border: 'solid 1px #ddd',
+    background: '#f0f0f0',
+    margin: '0 10px',
+  },
+  sizes: {
+    width: 200,
+    height: 200,
+  },
+};
+
 export default function NewJob() {
   const [visible, handleVisible] = useState(false);
   const [clientId, setClientId] = useState(undefined);
@@ -118,10 +133,8 @@ export default function NewJob() {
         onOk={onCancel}
       >
         <Resizable
-          defaultSize={{ width: '60%', height: '100%' }}
-          maxWidth='80%'
-          maxHeight='100%'
-          style={{ border: '1px solid blue' }}
+          defaultSize={(resizeBoxes.sizes.width, resizeBoxes.sizes.height)}
+          style={resizeBoxes.styles}
         >
           <Form form={form} layout='vertical' onFinish={onFinish}>
             <Form.Item
@@ -215,28 +228,18 @@ export default function NewJob() {
             </Form.Item>
           </Form>
         </Resizable>
-        <div className='right'>
-          <Resizable
-            defaultSize={{ width: '100%', height: '50%' }}
-            maxWidth='90%'
-            maxHeight='90%'
-            style={{ border: '1px solid green' }}
-          >
-            <div className='tips-and-hints'>
-              <h1>TIP CONTAINER</h1>
-            </div>
-          </Resizable>
-          <Resizable
-            defaultSize={{ width: '100%', height: '50%' }}
-            maxWidth='90%'
-            maxHeight='90%'
-            style={{ border: '1px solid red' }}
-          >
-            <div className='client-view'>
-              <NewJobPDF data={formData} />
-            </div>
-          </Resizable>
-        </div>
+        <Resizable
+          defaultSize={(resizeBoxes.sizes.width, resizeBoxes.sizes.height)}
+          style={resizeBoxes.styles}
+        >
+          <h1>TIPS CONTAINER</h1>
+        </Resizable>
+        <Resizable
+          defaultSize={(resizeBoxes.sizes.width, resizeBoxes.sizes.height)}
+          style={resizeBoxes.styles}
+        >
+          <NewJobPDF data={formData} />
+        </Resizable>
       </StyledModal>
     </div>
   );
@@ -244,22 +247,12 @@ export default function NewJob() {
 
 const StyledModal = styled(Modal)`
   width: 100% !important;
+  max-width: 100vw;
 
   .ant-modal-body {
     display: flex;
 
     form {
-    }
-
-    .right {
-      margin: 0 30px;
-      flex-grow: 1;
-
-      .tips-and-hints {
-      }
-
-      .client-view {
-      }
     }
   }
 `;

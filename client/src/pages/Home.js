@@ -1,14 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link, useHistory } from 'react-router-dom';
-import {
-  TeamOutlined,
-  FolderOpenOutlined,
-  ProfileOutlined,
-} from '@ant-design/icons';
+import { FolderOpenOutlined, ProfileOutlined } from '@ant-design/icons';
 
 import NewClient from '../components/Modals/NewClient';
-import NewJob from '../components/Modals/NewJob';
 
 export default function Home() {
   const ICON_SIZE = '30px';
@@ -20,7 +15,12 @@ export default function Home() {
       </StyledBanner>
       <StyledFlexContainer>
         <NewClient />
-        <NewJob />
+        <StyledLink to='/new-job' className='btn__big-square'>
+          <div>
+            <FolderOpenOutlined style={{ fontSize: ICON_SIZE }} />
+            <span>NEW JOB</span>
+          </div>
+        </StyledLink>
         <StyledLink to='/clients' className='btn__big-square'>
           <div>
             <FolderOpenOutlined style={{ fontSize: ICON_SIZE }} />
